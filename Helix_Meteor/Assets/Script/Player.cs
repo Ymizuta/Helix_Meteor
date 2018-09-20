@@ -6,6 +6,7 @@ public class Player : MonoBehaviour {
 
     public float player_posz;           //
     public float fall_speed = 0.001f;    //前方に移動するスピード
+    public float add_speed = 0.5f;
 
     float player_degree;
     float move_speed;
@@ -45,6 +46,9 @@ public class Player : MonoBehaviour {
             Move(direction);
         }
 
+        //時間経過でスピードアップ
+        fall_speed = SpeedUp(add_speed);
+
     }
 
     void Move(DIRECTION direction)
@@ -73,6 +77,12 @@ public class Player : MonoBehaviour {
             default:
                 return;
         }
+    }
+
+    public float SpeedUp(float add_speed)
+    {
+        fall_speed += add_speed * Time.deltaTime;
+        return fall_speed;
     }
 
     private void OnTriggerEnter(Collider other)
