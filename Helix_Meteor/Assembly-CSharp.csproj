@@ -63,8 +63,10 @@
   <ItemGroup>
     <Compile Include="Assets\other\test_circle_move.cs" />
     <Compile Include="Assets\other\TouchController.cs" />
+    <Compile Include="Assets\Script\BackToStartPotision.cs" />
     <Compile Include="Assets\Script\Camera.cs" />
     <Compile Include="Assets\Script\Controller.cs" />
+    <Compile Include="Assets\Script\CreateObstacle.cs" />
     <Compile Include="Assets\Script\Player.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/workspace/Helix_Meteor/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
