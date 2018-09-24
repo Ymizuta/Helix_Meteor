@@ -6,7 +6,7 @@ public class Player : MonoBehaviour {
 
     [SerializeField] Controller Controller_ = null; // エディターからアタッチする
 
-    public float player_posz;           //
+    public float player_posz;           
     public float default_fall_speed = 0.5f;
     public float fall_speed;   //前方に移動する初期速度
     public float add_speed = 0.01f;      //時間経過で加算される速度
@@ -14,8 +14,8 @@ public class Player : MonoBehaviour {
     //円周上を移動するための変数
     float player_degree;
     float move_speed = 5f;              //左右移動の速度
-    float height = 1f;
-    float width = 1f;
+    float height = 3f;
+    float width = 3f;
 
     private void Start()
     {
@@ -37,24 +37,24 @@ public class Player : MonoBehaviour {
     //プレイヤーの左右移動関数
     public void Move(Controller.DIRECTION direction)
     {
-        float x;
-        float y;
+        float player_posx;
+        float Player_posy;
 
         switch (direction)
         {
-            //右
+            //右に移動
             case Controller.DIRECTION.Right:
                 player_degree += move_speed;
-                x = Mathf.Cos(player_degree * Mathf.Deg2Rad) * 3;
-                y = Mathf.Sin(player_degree * Mathf.Deg2Rad) * 3;
-                gameObject.transform.position = new Vector3(x, y, player_posz);
+                player_posx = Mathf.Cos(player_degree * Mathf.Deg2Rad) * width;
+                Player_posy = Mathf.Sin(player_degree * Mathf.Deg2Rad) * height;
+                gameObject.transform.position = new Vector3(player_posx,Player_posy, player_posz);
                 return;
-            //左 
+            //左に移動
             case Controller.DIRECTION.Left:
                 player_degree -= move_speed;
-                x = Mathf.Cos(player_degree * Mathf.Deg2Rad) * 3;
-                y = Mathf.Sin(player_degree * Mathf.Deg2Rad) * 3;
-                gameObject.transform.position = new Vector3(x, y, player_posz);
+                player_posx = Mathf.Cos(player_degree * Mathf.Deg2Rad) * width;
+                Player_posy = Mathf.Sin(player_degree * Mathf.Deg2Rad) * height;
+                gameObject.transform.position = new Vector3(player_posx, Player_posy, player_posz);
                 return;
             default:
                 return;
@@ -68,10 +68,11 @@ public class Player : MonoBehaviour {
         return fall_speed;
     }
 
-    //衝突処理
+    //オブジェクトに衝突した際の処理関数
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("衝突！");
+        //障害物に衝突した時に原則する
         if (other.gameObject.tag == "Obstacle")
         {
             Debug.Log("減速");
