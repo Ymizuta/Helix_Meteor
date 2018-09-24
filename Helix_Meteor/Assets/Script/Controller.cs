@@ -8,7 +8,7 @@ public class Controller : MonoBehaviour {
     [SerializeField] Player player_ = null; // エディターからアタッチする
     [SerializeField] Camera meteor_camera_ = null; // エディターからアタッチする
 
-    public enum DIRECTION
+    public enum Direction
     {
         Right,
         Left
@@ -18,18 +18,20 @@ public class Controller : MonoBehaviour {
 	void Update () {
 
         //左右入力取得
-        DIRECTION direction;
+        //アップデート内にDirection direction;はいらないのでは
+        //スワイプにしたとき、角度と値を渡すことになる
+        Direction direction;
         //右入力
         if (Input.GetAxis("Horizontal") > 0)
         {
-            direction = DIRECTION.Right;
+            direction = Direction.Right;
             player_.Move(direction);
         }
         else
         //左入力
         if (Input.GetAxis("Horizontal") < 0)
         {
-            direction = DIRECTION.Left;
+            direction = Direction.Left;
             player_.Move(direction);
         }
     }
