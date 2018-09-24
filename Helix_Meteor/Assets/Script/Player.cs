@@ -79,5 +79,4 @@ public class Player : MonoBehaviour {
             fall_speed = default_fall_speed;
         }
     }
-
 }

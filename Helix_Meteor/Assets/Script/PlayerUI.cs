@@ -1,0 +1,21 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class PlayerUI : MonoBehaviour {
+
+    public Text speed_text;
+
+	// Use this for initialization
+	void Start () {
+        string speed = gameObject.GetComponent<Player>().fall_speed.ToString();
+        speed_text.text = "速度：" + speed;
+	}
+	
+	// Update is called once per frame
+	void Update () {
+        string speed = gameObject.GetComponent<Player>().fall_speed.ToString();
+        speed_text.text = "速度：" + speed;
+    }
+}
