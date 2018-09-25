@@ -6,10 +6,9 @@ public class Player : MonoBehaviour {
 
     [SerializeField] Controller Controller_ = null;     // エディターからアタッチする
 
-    Vector3 player_poz;
-    public float player_posz;
-    public float default_fall_speed = 0.5f;
-    public float fall_speed;                            //前方に移動する初期速度
+    public Vector3 player_poz;                          //プレイヤーの位置
+    public float default_fall_speed = 0.5f;             //前方に移動する初期速度
+    public float fall_speed;                            //前方に移動する速度
     public float add_speed = 0.01f;                     //時間経過で加算される速度
 
     //円周上を移動するための変数

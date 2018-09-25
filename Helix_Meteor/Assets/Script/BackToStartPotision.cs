@@ -9,7 +9,7 @@ public class BackToStartPotision : MonoBehaviour {
     private void OnTriggerEnter(Collider other)
     {
         Vector3 Player_position = player_.transform.position;
-        player_.GetComponent<Player>().player_posz = 0;
+        player_.GetComponent<Player>().player_poz.z = 0;
         player_.transform.position = new Vector3(Player_position.x, Player_position.y,0);
         Debug.Log(other.gameObject);
     }
