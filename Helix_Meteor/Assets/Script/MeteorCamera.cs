@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Camera : MonoBehaviour {
+public class MeteorCamera : MonoBehaviour {
 
     float camera_positionz;
     float distance_from_player = 10;

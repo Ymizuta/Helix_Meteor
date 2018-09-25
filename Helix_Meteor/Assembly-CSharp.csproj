@@ -65,9 +65,9 @@
     <Compile Include="Assets\other\TouchController.cs" />
     <Compile Include="Assets\Script\AppUtil.cs" />
     <Compile Include="Assets\Script\BackToStartPotision.cs" />
-    <Compile Include="Assets\Script\Camera.cs" />
     <Compile Include="Assets\Script\Controller.cs" />
     <Compile Include="Assets\Script\CreateObstacle.cs" />
+    <Compile Include="Assets\Script\MeteorCamera.cs" />
     <Compile Include="Assets\Script\Player.cs" />
     <Compile Include="Assets\Script\PlayerUI.cs" />
     <Reference Include="UnityEditor.StandardEvents">

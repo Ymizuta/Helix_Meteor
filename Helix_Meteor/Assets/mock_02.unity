@@ -443,7 +443,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player_: {fileID: 1941316774}
-  meteor_camera_: {fileID: 0}
+  meteor_camera: {fileID: 0}
 --- !u!4 &1029647630
 Transform:
   m_ObjectHideFlags: 0
@@ -1251,6 +1251,7 @@ GameObject:
   - component: {fileID: 1941316773}
   - component: {fileID: 1941316774}
   - component: {fileID: 1941316775}
+  - component: {fileID: 1941316776}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1354,7 +1355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Controller_: {fileID: 1029647629}
-  player_posz: 0
+  player_poz: {x: 0, y: 0, z: 0}
   default_fall_speed: 0.5
   fall_speed: 0.5
   add_speed: 0.1
@@ -1370,6 +1371,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed_text: {fileID: 1409328065}
+--- !u!114 &1941316776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1941316768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3d5b31f37d713e4084f8958f9efe066, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1948611493
 GameObject:
   m_ObjectHideFlags: 0
