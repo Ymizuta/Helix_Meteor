@@ -8,6 +8,7 @@ public class Controller : MonoBehaviour {
     [SerializeField] Player player_ = null; // エディターからアタッチ
     [SerializeField] Camera meteor_camera_ = null; // エディターからアタッチ
 
+    private Vector3 touch_poz;
     private Vector3 old_player_poz;                 //前フレームでのタッチ位置（スワイプによる上下左右移動処理用）
     private Vector3 new_player_poz;                 //現在フレームでのタッチ位置（スワイプによる上下左右移動処理用）
     private Vector3 move_direction;                 //上下左右移動の移動方向（Player_.Move関数の引数）
@@ -29,20 +30,20 @@ public class Controller : MonoBehaviour {
         if (info == TouchInfo.Began)
         {
             //スワイプによる移動処理のためタッチ位置を取得
-            Vector3 mouse_poz = AppUtil.GetTouchPosition();
-            mouse_poz.z = 1.0f;
-            old_player_poz = Camera.main.ScreenToWorldPoint(mouse_poz);
+            touch_poz = AppUtil.GetTouchPosition();
+            touch_poz.z = 1.0f;
+            old_player_poz = Camera.main.ScreenToWorldPoint(touch_poz);
             old_player_poz.z = 0f;
         }
         else
         if (info == TouchInfo.Moved)
         {
             //mouse_pozにタッチしている位置を返す
-            Vector3 mouse_poz = AppUtil.GetTouchPosition();
+            touch_poz = AppUtil.GetTouchPosition();
             //ScreenToWorldPointによる不具合防止のためZ座標を指定
-            mouse_poz.z = 1.0f;
+            touch_poz.z = 1.0f;
             //スクリーン座標をワールド座標に変換
-            new_player_poz = Camera.main.ScreenToWorldPoint(mouse_poz);
+            new_player_poz = Camera.main.ScreenToWorldPoint(touch_poz);
             //Z座標は移動させないよう初期化
             new_player_poz.z = 0f;
             //移動のためのベクトルを取得
