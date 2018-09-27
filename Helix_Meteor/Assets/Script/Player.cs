@@ -4,18 +4,21 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    [SerializeField] Controller Controller_ = null;     // エディターからアタッチする
+    [SerializeField] Controller Controller_ = null;      // エディターからアタッチする
 
-    public Vector3 player_poz;                          //プレイヤーの位置
-    public float default_fall_speed = 0.5f;             //前方に移動する初期速度
-    public float fall_speed;                            //前方に移動する速度
-    public float add_speed = 0.01f;                     //時間経過で加算される速度
+    public Vector3 player_poz;                           //プレイヤーの位置
+    private float default_fall_speed = 0.5f;             //前方に移動する初期速度
+    public float fall_speed;                             //前方に移動する速度
+    private float add_speed = 0.01f;                     //時間経過で加算されるプレイヤーの直進速度
+    public float reduce_speed = 1.0f;                    //障害物衝突時に減るプレイヤーの直進速度
+    private float MIN_SPEED = 0.5f;                      //プレイヤーの直進スピード下限
+    private float MAX_SPEED = 1.0f;                      //プレイヤーの直進スピード上限
 
     //円周上を移動するための変数
-    float player_degree;                                
-    float move_speed = 5f;                              //左右移動の速度
-    float height = 3f;
-    float width = 3f;
+    //float player_degree;                                
+    //float move_speed = 5f;                               //左右移動の速度
+    //float height = 3f;
+    //float width = 3f;
 
     private void Start()
     {
@@ -27,20 +30,55 @@ public class Player : MonoBehaviour {
     void Update()
     {
         //直進
-        player_poz = gameObject.transform.position;
-        player_poz.z += fall_speed;
-        player_poz.x = gameObject.transform.position.x;
-        player_poz.y = gameObject.transform.position.y;
-        gameObject.transform.position = player_poz;
+        Fall();
 
         //時間経過でスピードアップ
         fall_speed = SpeedUp();
     }
 
-    //プレイヤーの上下左右移動(スワイプ/マウスドラッグによる操作)
+    //プレイヤーを直進させる関数
+    private void Fall()
+    {
+        player_poz = gameObject.transform.position;
+        player_poz.z += fall_speed;
+        player_poz.x = gameObject.transform.position.x;
+        player_poz.y = gameObject.transform.position.y;
+        gameObject.transform.position = player_poz;
+    }
+
+    //プレイヤーの上下左右斜め移動関数(スワイプ/マウスドラッグによる操作)
     public void Move(Vector3 move_direction,float move_speed)
     {
         gameObject.transform.position += move_direction * move_speed;
+    }
+
+    //時間経過でプレイヤーを加速する関数
+    private float SpeedUp()
+    {
+        fall_speed += add_speed * Time.deltaTime;
+        //プレイヤーの速度は上限・下限の範囲で変動
+        return Mathf.Clamp(fall_speed, MIN_SPEED, MAX_SPEED);
+    }
+
+    //障害物衝突時にプレイヤーを減速する関数
+    private float SpeedDown()
+    {
+        fall_speed -= reduce_speed;
+        //プレイヤーの速度は上限・下限の範囲で変動
+        return Mathf.Clamp(fall_speed,MIN_SPEED,MAX_SPEED);
+    }
+
+    //オブジェクトに衝突した際の処理の関数
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("衝突！");
+        //障害物に衝突した時に減速
+        if (other.gameObject.tag == "Obstacle")
+        {
+            Debug.Log("減速");
+            //直進スピードを初期化
+            fall_speed = SpeedDown();
+        }
     }
 
     //プレイヤーの左右移動関数(矢印キーでの操作)
@@ -63,24 +101,4 @@ public class Player : MonoBehaviour {
     //    player_poz.y = Mathf.Sin(player_degree * Mathf.Deg2Rad) * height;
     //    gameObject.transform.position = new Vector3(player_poz.x, player_poz.y, player_poz.z);
     //}
-
-    //時間経過でプレイヤーを加速する関数
-    public float SpeedUp()
-    {
-        fall_speed += add_speed * Time.deltaTime;
-        return fall_speed;
-    }
-
-    //オブジェクトに衝突した際の処理関数
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("衝突！");
-        //障害物に衝突した時に原則する
-        if (other.gameObject.tag == "Obstacle")
-        {
-            Debug.Log("減速");
-            //直進スピードを初期化
-            fall_speed = default_fall_speed;
-        }
-    }
 }
