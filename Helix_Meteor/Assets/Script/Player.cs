@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    [SerializeField] Controller Controller_ = null;      // エディターからアタッチする
+    [SerializeField] Controller Controller_ = null;         // エディターからアタッチする
 
-    public Vector3 player_poz;                           //プレイヤーの位置
-    private float default_fall_speed = 0.5f;             //前方に移動する初期速度
-    public float fall_speed;                             //前方に移動する速度
-    private float add_speed = 0.01f;                     //時間経過で加算されるプレイヤーの直進速度
-    public float reduce_speed = 1.0f;                    //障害物衝突時に減るプレイヤーの直進速度
-    private float MIN_SPEED = 0.5f;                      //プレイヤーの直進スピード下限
-    private float MAX_SPEED = 1.0f;                      //プレイヤーの直進スピード上限
+    public int default_player_life = 3;                     //プレイヤーのライフ初期値
+    public int player_life;                                 //プレイヤーのライフ
+
+    public Vector3 player_poz;                              //プレイヤーの位置
+    private float default_fall_speed = 0.5f;                //前方に移動する初期速度
+    public float fall_speed;                                //前方に移動する速度
+    private float add_speed = 0.1f;                         //時間経過で加算されるプレイヤーの直進速度
+    public float reduce_speed = 1.0f;                       //障害物衝突時に減るプレイヤーの直進速度
+    private float MIN_SPEED = 0.5f;                         //プレイヤーの直進スピード下限
+    private float MAX_SPEED = 5.0f;                         //プレイヤーの直進スピード上限
 
     //円周上を移動するための変数
     //float player_degree;                                
@@ -22,6 +25,9 @@ public class Player : MonoBehaviour {
 
     private void Start()
     {
+        //ライフ初期化
+        player_life = default_player_life;
+
         //直進スピードの初期値を設定
         fall_speed = default_fall_speed;
     }
@@ -29,10 +35,10 @@ public class Player : MonoBehaviour {
     // Update is called once per frame  
     void Update()
     {
-        //直進
+        //プレイヤーが直進
         Fall();
 
-        //時間経過でスピードアップ
+        //時間経過でプレイヤーの直進スピードアップ
         fall_speed = SpeedUp();
     }
 
@@ -76,8 +82,18 @@ public class Player : MonoBehaviour {
         if (other.gameObject.tag == "Obstacle")
         {
             Debug.Log("減速");
-            //直進スピードを初期化
+            //減速
             fall_speed = SpeedDown();
+
+            //ライフ減少
+            player_life -= 1;
+            //ライフが０になるとゲームオーバー
+            if(player_life == 0)
+            {
+                Debug.Log("ライフ０");
+                GameObject.Destroy(gameObject);
+            }
+
         }
     }
 
