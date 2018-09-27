@@ -37,27 +37,33 @@ public class Player : MonoBehaviour {
         fall_speed = SpeedUp();
     }
 
-    //プレイヤーの左右移動関数
-    public void Move(Controller.Direction direction)
+    //プレイヤーの上下左右移動(スワイプ/マウスドラッグによる操作)
+    public void Move(Vector3 move_direction,float move_speed)
     {
-        switch (direction)
-        {
-            //右に移動
-            case Controller.Direction.Right:
-                player_degree += move_speed;
-                break;
-            //左に移動
-            case Controller.Direction.Left:
-                player_degree -= move_speed;
-                break;
-            default:
-                break;
-        }
-        player_poz.x = Mathf.Cos(player_degree * Mathf.Deg2Rad) * width;
-        player_poz.y = Mathf.Sin(player_degree * Mathf.Deg2Rad) * height;
-        gameObject.transform.position = new Vector3(player_poz.x, player_poz.y, player_poz.z);
+        gameObject.transform.position += move_direction * move_speed;
     }
-    
+
+    //プレイヤーの左右移動関数(矢印キーでの操作)
+    //public void Move(Controller.Direction direction)
+    //{
+    //    switch (direction)
+    //    {
+    //        //右に移動
+    //        case Controller.Direction.Right:
+    //            player_degree += move_speed;
+    //            break;
+    //        //左に移動
+    //        case Controller.Direction.Left:
+    //            player_degree -= move_speed;
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //    player_poz.x = Mathf.Cos(player_degree * Mathf.Deg2Rad) * width;
+    //    player_poz.y = Mathf.Sin(player_degree * Mathf.Deg2Rad) * height;
+    //    gameObject.transform.position = new Vector3(player_poz.x, player_poz.y, player_poz.z);
+    //}
+
     //時間経過でプレイヤーを加速する関数
     public float SpeedUp()
     {

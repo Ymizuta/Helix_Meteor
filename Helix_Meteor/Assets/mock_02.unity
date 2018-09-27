@@ -443,7 +443,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player_: {fileID: 1941316774}
-  meteor_camera: {fileID: 0}
+  meteor_camera_: {fileID: 0}
 --- !u!4 &1029647630
 Transform:
   m_ObjectHideFlags: 0

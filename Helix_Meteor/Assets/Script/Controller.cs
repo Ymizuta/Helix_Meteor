@@ -5,73 +5,74 @@ using UnityEngine;
 
 public class Controller : MonoBehaviour {
 
-    [SerializeField] Player player_ = null; // エディターからアタッチする
-//    [SerializeField] Camera meteor_camera_ = null; // エディターからアタッチする
+    [SerializeField] Player player_ = null; // エディターからアタッチ
+    [SerializeField] Camera meteor_camera_ = null; // エディターからアタッチ
 
-    //serializefieldでうまくアタッチできないため暫定処置
-    public Camera meteor_camera;
+    private Vector3 old_player_poz;                 //前フレームでのタッチ位置（スワイプによる上下左右移動処理用）
+    private Vector3 new_player_poz;                 //現在フレームでのタッチ位置（スワイプによる上下左右移動処理用）
+    private Vector3 move_direction;                 //上下左右移動の移動方向（Player_.Move関数の引数）
+    private float move_speed = 10.0f;               //上下左右移動のスピード調整用の値（Player_.Move関数の引数）
 
-    private Vector3 new_player_poz;
-    private Vector3 old_player_poz;
-
-    public enum Direction
-    {
-        Right,
-        Left
-    }
+    //円状移動のための列挙型
+    //public enum Direction
+    //{
+    //    Right,
+    //    Left
+    //}
 
     // Update is called once per frame
     void Update () {
 
-        //左右入力取得
-        //アップデート内にDirection direction;はいらないのでは
-        //スワイプにしたとき、角度と値を渡すことになる
-        Direction direction;
-        //右入力
-        if (Input.GetAxis("Horizontal") > 0)
-        {
-            direction = Direction.Right;
-            player_.Move(direction);
-        }
-        else
-        //左入力
-        if (Input.GetAxis("Horizontal") < 0)
-        {
-            direction = Direction.Left;
-            player_.Move(direction);
-        }
 
         //タッチ操作
         TouchInfo info = AppUtil.GetTouch();
         if (info == TouchInfo.Began)
         {
-//            Debug.Log("Begun!");
-
+            //スワイプによる移動処理のためタッチ位置を取得
             Vector3 mouse_poz = AppUtil.GetTouchPosition();
-            mouse_poz.z = 10.0f;
+            mouse_poz.z = 1.0f;
             old_player_poz = Camera.main.ScreenToWorldPoint(mouse_poz);
+            old_player_poz.z = 0f;
         }
         else
         if (info == TouchInfo.Moved)
         {
-            Debug.Log("Move!");
+            //mouse_pozにタッチしている位置を返す
             Vector3 mouse_poz = AppUtil.GetTouchPosition();
-            mouse_poz.z = 10.0f;
+            //ScreenToWorldPointによる不具合防止のためZ座標を指定
+            mouse_poz.z = 1.0f;
+            //スクリーン座標をワールド座標に変換
             new_player_poz = Camera.main.ScreenToWorldPoint(mouse_poz);
+            //Z座標は移動させないよう初期化
+            new_player_poz.z = 0f;
+            //移動のためのベクトルを取得
+            move_direction = new_player_poz - old_player_poz;
 
- //           Debug.Log("old:" + old_player_poz + "new" + new_player_poz);
+            //プレイヤー上下左右移動
+            player_.Move(move_direction,move_speed);
 
-            Vector3 move_direction = new_player_poz - old_player_poz;
-            move_direction.z = 0;
- //           Debug.Log(move_direction);
-            player_.transform.position += move_direction;
-
+            //次フレームでの移動処理のためold_player_pozに現在のフレームのタッチ位置(new_player_poz)を格納
             old_player_poz = new_player_poz;
         }
         else
         if (info == TouchInfo.Ended)
         {
-//            Debug.Log("Ended");
         }
+
+        //左右入力取得（キーボード操作・円状移動）
+        //Direction direction;
+        ////右入力
+        //if (Input.GetAxis("Horizontal") > 0)
+        //{
+        //    direction = Direction.Right;
+        //    player_.Move(direction);
+        //}
+        //else
+        ////左入力
+        //if (Input.GetAxis("Horizontal") < 0)
+        //{
+        //    direction = Direction.Left;
+        //    player_.Move(direction);
+        //}
     }
 }
