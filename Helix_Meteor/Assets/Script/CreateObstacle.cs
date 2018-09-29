@@ -9,7 +9,7 @@ public class CreateObstacle : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        GameObject newObstacle =
-            Instantiate(Obstacle,gameObject.transform.position,gameObject.transform.rotation) as GameObject;
+        //GameObject newObstacle =
+        //    Instantiate(Obstacle,gameObject.transform.position,gameObject.transform.rotation) as GameObject;
 	}	
 }
