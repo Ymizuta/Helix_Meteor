@@ -84,7 +84,7 @@ public class Player : MonoBehaviour {
             //無敵時間を計測
             invincible_time += add_invincible_time * Time.deltaTime;
             //一定時間経過で無敵モード解除
-            if (invincible_time >= MAX_INVINCIBLE_TIME)
+            if (InvincibleTimeIsOver())
             {
                 //無敵モードフラグ解除
                 invincible_flag = false;
@@ -103,8 +103,8 @@ public class Player : MonoBehaviour {
         {
             //時間経過で無敵モード・ポイントを累積
             invincible_point = Charge();
-            //無敵モードフラグを立てる
-            if (invincible_point >= MAX_INVINCIBLE_POINT) {
+            //無敵モードポイントが最大値の時、無敵モードフラグを立てる
+            if (InvinciblePointIsMax()) {
                 invincible_flag = true;
                 Debug.Log("無敵モード！");
                 Debug.Log("無敵モードポイント：" + invincible_point);
@@ -236,6 +236,29 @@ public class Player : MonoBehaviour {
         get
         {
             return invincible_point;
+        }
+    }
+
+    //無敵モードポイントが最大ならtrueを返す
+    private bool InvinciblePointIsMax()
+    {
+        if (invincible_point >= MAX_INVINCIBLE_POINT)
+        {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    private bool InvincibleTimeIsOver()
+    {
+        if (invincible_time >= MAX_INVINCIBLE_TIME)
+        {
+            return true;
+        }
+        else{
+            return false;
         }
     }
 
