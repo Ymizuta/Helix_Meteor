@@ -180,7 +180,6 @@ public class Player : MonoBehaviour {
                 GameObject.Destroy(new_explosion_effect, 3f);
                 GameObject.Destroy(gameObject);
             }
-
         }
     }
 

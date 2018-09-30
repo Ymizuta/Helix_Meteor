@@ -6,7 +6,7 @@ using UnityEngine;
 public class Controller : MonoBehaviour {
 
     [SerializeField] Player player_ = null; // エディターからアタッチ
-    [SerializeField] Camera meteor_camera_ = null; // エディターからアタッチ
+    [SerializeField] MeteorCamera meteor_camera_ = null; // エディターからアタッチ
 
     private Vector3 touch_poz;
     private Vector3 old_player_poz;                 //前フレームでのタッチ位置（スワイプによる上下左右移動処理用）
@@ -23,7 +23,6 @@ public class Controller : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-
 
         //タッチ操作
         TouchInfo info = AppUtil.GetTouch();
