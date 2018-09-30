@@ -14,18 +14,18 @@ public class Player : MonoBehaviour {
     const float MAX_Y_POSITION = 3;
     //プレイヤーのライフに関する変数
     private int default_player_life = 3;                    //プレイヤーのライフ初期値
-    public int player_life;                                 //プレイヤーのライフ
+    private int player_life;                                 //プレイヤーのライフ
     //プレイヤーの速度に関する変数
     private float default_fall_speed = 0.5f;                //前方に移動する初期速度
-    public float fall_speed;                                //前方に移動する速度
+    private float fall_speed;                                //前方に移動する速度
     private float add_speed = 0.1f;                         //時間経過で加算されるプレイヤーの直進速度
-    public float reduce_speed = 1.0f;                       //障害物衝突時に減るプレイヤーの直進速度
+    private float reduce_speed = 1.0f;                       //障害物衝突時に減るプレイヤーの直進速度
     const float MIN_SPEED = 0.5f;                           //プレイヤーの直進スピード下限
     const float MAX_SPEED = 2.0f;                           //プレイヤーの直進スピード上限
     //無敵モードポイントに関する変数
     private bool invincible_flag = false;                   //無敵モードフラグ
     private float defaul_invincible_point = 0f;             //無敵モードポイントの初期値
-    public float invincible_point;                          //無敵モードポイント（累積）
+    private float invincible_point;                          //無敵モードポイント（累積）
     private float add_invincible_point = 1.0f;              //加算される無敵モードポイント
     private float reduced_invincible_point = 1.0f;          //減じられる無敵モードポイント
     const float MIN_INVINCIBLE_POINT = 0f;                  //無敵モードポイントの下限値
@@ -212,6 +212,31 @@ public class Player : MonoBehaviour {
         pt_red_fire.Play();
         Jet_Effect.SetActive(false);
  //       pt_blue_fire.Stop();
+    }
+
+    //ゲッター
+    public int Player_life
+    {
+        get
+        {
+            return player_life;
+        }
+    }
+    //ゲッター
+    public float Fall_speed
+    {
+        get
+        {
+            return fall_speed;
+        }
+    }
+    //ゲッター
+    public float Invincible_point
+    {
+        get
+        {
+            return invincible_point;
+        }
     }
 
     //プレイヤーの左右移動関数(矢印キーでの操作)

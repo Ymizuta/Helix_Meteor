@@ -11,9 +11,9 @@ public class PlayerUI : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        string speed = gameObject.GetComponent<Player>().fall_speed.ToString();
-        string i_point = gameObject.GetComponent<Player>().invincible_point.ToString();
-        string player_life = gameObject.GetComponent<Player>().player_life.ToString();
+        string speed = gameObject.GetComponent<Player>().Fall_speed.ToString();
+        string i_point = gameObject.GetComponent<Player>().Invincible_point.ToString();
+        string player_life = gameObject.GetComponent<Player>().Player_life.ToString();
         speed_text.text = "速度：" + speed;
         invincible_point_text.text = "無敵化ポイント：" + i_point;
         player_life_text.text = "LIFE：" + player_life;
@@ -21,9 +21,9 @@ public class PlayerUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        string speed = gameObject.GetComponent<Player>().fall_speed.ToString();
-        string i_point = gameObject.GetComponent<Player>().invincible_point.ToString();
-        string player_life = gameObject.GetComponent<Player>().player_life.ToString();
+        string speed = gameObject.GetComponent<Player>().Fall_speed.ToString();
+        string i_point = gameObject.GetComponent<Player>().Invincible_point.ToString();
+        string player_life = gameObject.GetComponent<Player>().Player_life.ToString();
         speed_text.text = "速度：" + speed;
         invincible_point_text.text = "無敵化ポイント：" + i_point;
         player_life_text.text = "LIFE：" + player_life;
