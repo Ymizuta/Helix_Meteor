@@ -86,31 +86,14 @@ public class Player : MonoBehaviour {
             //一定時間経過で無敵モード解除
             if (InvincibleTimeIsOver())
             {
-                //無敵モードフラグ解除
-                invincible_flag = false;
-                //無敵時間を初期化
-                invincible_time = default_invincible_time;
-                //無敵モードポイントを初期化
-                invincible_point = defaul_invincible_point;
-                Debug.Log("無敵モード解除");
-                //プレイヤーのエフェクト初期化
-                InvincibleEffectOff();
+                InvincibleModeOff();
             }
         }
 
         //通常モードの時、無敵モードポイント累積・一定値を超えると無敵モード
         if (invincible_flag == false)
         {
-            //時間経過で無敵モード・ポイントを累積
-            invincible_point = Charge();
-            //無敵モードポイントが最大値の時、無敵モードフラグを立てる
-            if (InvinciblePointIsMax()) {
-                invincible_flag = true;
-                Debug.Log("無敵モード！");
-                Debug.Log("無敵モードポイント：" + invincible_point);
-                //プレイヤーのエフェクト変化
-                InvincibleEffectOn();
-            }
+            InvincibleModeOn();
         }
     }
 
@@ -155,10 +138,11 @@ public class Player : MonoBehaviour {
     }
 
     //時間経過で無敵モードポイントを累積
-    private float Charge()
+    private float AddInvinciblePoint()
     {
-        invincible_point += add_invincible_point * Time.deltaTime;
-        return Mathf.Clamp(invincible_point, MIN_INVINCIBLE_POINT, MAX_INVINCIBLE_POINT);
+        float temp_invincible_point = invincible_point;
+        temp_invincible_point += add_invincible_point * Time.deltaTime;
+        return Mathf.Clamp(temp_invincible_point, MIN_INVINCIBLE_POINT, MAX_INVINCIBLE_POINT);
     }
 
     //オブジェクトに衝突した際の処理の関数
@@ -250,7 +234,8 @@ public class Player : MonoBehaviour {
             return false;
         }
     }
-    
+
+    //無敵状態が一定時間経過するとtrueを返す
     private bool InvincibleTimeIsOver()
     {
         if (invincible_time >= MAX_INVINCIBLE_TIME)
@@ -260,6 +245,34 @@ public class Player : MonoBehaviour {
         else{
             return false;
         }
+    }
+
+    private void InvincibleModeOn()
+    {
+        //時間経過で無敵モード・ポイントを累積
+        invincible_point = AddInvinciblePoint();
+        //無敵モードポイントが最大値の時、無敵モードフラグを立てる
+        if (InvinciblePointIsMax())
+        {
+            Debug.Log("無敵モード！");
+            //無敵モードフラグON
+            invincible_flag = true;
+            //プレイヤーのエフェクト変化
+            InvincibleEffectOn();
+        }
+    }
+
+    private void InvincibleModeOff()
+    {
+        //無敵モードフラグ解除
+        invincible_flag = false;
+        //無敵時間を初期化
+        invincible_time = default_invincible_time;
+        //無敵モードポイントを初期化
+        invincible_point = defaul_invincible_point;
+        Debug.Log("無敵モード解除");
+        //プレイヤーのエフェクト初期化
+        InvincibleEffectOff();
     }
 
     //プレイヤーの左右移動関数(矢印キーでの操作)
