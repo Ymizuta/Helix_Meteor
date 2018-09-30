@@ -6252,7 +6252,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1027630362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6357,7 +6357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player_: {fileID: 1941316774}
-  meteor_camera_: {fileID: 1030605456}
+  meteor_camera_: {fileID: 0}
 --- !u!4 &1029647630
 Transform:
   m_ObjectHideFlags: 0
