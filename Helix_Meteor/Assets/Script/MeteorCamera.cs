@@ -7,7 +7,7 @@ public class MeteorCamera : MonoBehaviour {
     [SerializeField] Player Player_ = null;      // エディターからアタッチする
 
     float camera_positionz;
-    float distance_from_player = 10;
+    float distance_from_player = 20;
 //    public GameObject player;
     private Vector3 camera_poz;
 	

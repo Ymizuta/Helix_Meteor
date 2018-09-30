@@ -6,11 +6,16 @@ public class Player : MonoBehaviour {
 
     [SerializeField] Controller Controller_ = null;         //エディターからアタッチする
 
+    //プレイヤーの位置に関する変数
+    public Vector3 player_poz;                              //プレイヤーの位置
+    const float MIN_X_POSITION = -3;
+    const float MAX_X_POSITION = 3;
+    const float MIN_Y_POSITION = -3;
+    const float MAX_Y_POSITION = 3;
     //プレイヤーのライフに関する変数
     private int default_player_life = 3;                    //プレイヤーのライフ初期値
     public int player_life;                                 //プレイヤーのライフ
     //プレイヤーの速度に関する変数
-    public Vector3 player_poz;                              //プレイヤーの位置
     private float default_fall_speed = 0.5f;                //前方に移動する初期速度
     public float fall_speed;                                //前方に移動する速度
     private float add_speed = 0.1f;                         //時間経過で加算されるプレイヤーの直進速度
@@ -45,6 +50,9 @@ public class Player : MonoBehaviour {
 
     private void Start()
     {
+        //プレイヤー位置格納
+        player_poz = gameObject.transform.position;
+        
         //ライフ初期化
         player_life = default_player_life;
 
@@ -119,23 +127,31 @@ public class Player : MonoBehaviour {
     //プレイヤーの上下左右斜め移動関数(スワイプ/マウスドラッグによる操作)
     public void Move(Vector3 move_direction,float move_speed)
     {
-        gameObject.transform.position += move_direction * move_speed;
+        Vector3 temp_player_poz = gameObject.transform.position;
+        temp_player_poz += move_direction * move_speed;
+        temp_player_poz.x = Mathf.Clamp(temp_player_poz.x,MIN_X_POSITION,MAX_X_POSITION);
+        temp_player_poz.y = Mathf.Clamp(temp_player_poz.y, MIN_Y_POSITION, MAX_Y_POSITION);
+        gameObject.transform.position = temp_player_poz;
     }
 
     //時間経過でプレイヤーを加速する関数
     private float SpeedUp()
     {
-        fall_speed += add_speed * Time.deltaTime;
+        //返り値用ローカル変数を宣言
+        float temp_fall_speed = fall_speed;
+        temp_fall_speed += add_speed * Time.deltaTime;
         //プレイヤーの速度は上限・下限の範囲で変動
-        return Mathf.Clamp(fall_speed, MIN_SPEED, MAX_SPEED);
+        return Mathf.Clamp(temp_fall_speed, MIN_SPEED, MAX_SPEED);
     }
 
     //障害物衝突時にプレイヤーを減速する関数
     private float SpeedDown()
     {
-        fall_speed -= reduce_speed;
+        //返り値用ローカル変数を宣言
+        float temp_fall_speed = fall_speed;
+        temp_fall_speed -= reduce_speed;
         //プレイヤーの速度は上限・下限の範囲で変動
-        return Mathf.Clamp(fall_speed,MIN_SPEED,MAX_SPEED);
+        return Mathf.Clamp(temp_fall_speed,MIN_SPEED,MAX_SPEED);
     }
 
     //時間経過で無敵モードポイントを累積

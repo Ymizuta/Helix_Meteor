@@ -30,7 +30,7 @@ public class Controller : MonoBehaviour {
         {
             //スワイプによる移動処理のためタッチ位置を取得
             touch_poz = AppUtil.GetTouchPosition();
-            touch_poz.z = 1.0f;
+            touch_poz.z = 1.0f;                                         //z座標は扱いは別途調整
             old_player_poz = Camera.main.ScreenToWorldPoint(touch_poz);
             old_player_poz.z = 0f;
         }
