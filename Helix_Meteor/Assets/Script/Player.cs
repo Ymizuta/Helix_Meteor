@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    [SerializeField] Controller Controller_ = null;         // エディターからアタッチする
+    [SerializeField] Controller Controller_ = null;         //エディターからアタッチする
 
+    //プレイヤーのライフに関する変数
     private int default_player_life = 3;                    //プレイヤーのライフ初期値
     public int player_life;                                 //プレイヤーのライフ
-
+    //プレイヤーの速度に関する変数
     public Vector3 player_poz;                              //プレイヤーの位置
     private float default_fall_speed = 0.5f;                //前方に移動する初期速度
     public float fall_speed;                                //前方に移動する速度
@@ -16,20 +17,25 @@ public class Player : MonoBehaviour {
     public float reduce_speed = 1.0f;                       //障害物衝突時に減るプレイヤーの直進速度
     const float MIN_SPEED = 0.5f;                           //プレイヤーの直進スピード下限
     const float MAX_SPEED = 2.0f;                           //プレイヤーの直進スピード上限
+    //無敵モードポイントに関する変数
+    private bool invincible_flag = false;                   //無敵モードフラグ
+    private float defaul_invincible_point = 0f;             //無敵モードポイントの初期値
+    public float invincible_point;                          //無敵モードポイント（累積）
+    private float add_invincible_point = 1.0f;              //加算される無敵モードポイント
+    private float reduced_invincible_point = 1.0f;          //減じられる無敵モードポイント
+    const float MIN_INVINCIBLE_POINT = 0f;                  //無敵モードポイントの下限値
+    const float MAX_INVINCIBLE_POINT = 5.0f;                //無敵モードポイントの上限値
+    //無敵時間に関する変数
+    private float default_invincible_time = 0f;             //無敵モード中の経過時間の初期値
+    private float invincible_time;                          //無敵モード中の経過時間（累積）
+    private float add_invincible_time = 1.0f;               //加算される無敵モード中の経過時間
+    const float MAX_INVINCIBLE_TIME = 5.0f;                 //無敵モード時間の上限
 
-    //無敵モードポイント
-    private bool invincible_flag = false;
-    private float defaul_invincible_point = 0f;
-    public float invincible_point;
-    private float add_invincible_point = 1.0f;
-    private float reduced_invincible_point = 1.0f;
-    const float MIN_INVINCIBLE_POINT = 0f;
-    const float MAX_INVINCIBLE_POINT = 5.0f;
-    //無敵時間
-    private float default_invincible_time = 0f;
-    private float invincible_time;
-    private float add_invincible_time = 1.0f;
-    const float MAX_INVINCIBLE_TIME = 5.0f;
+    //演出
+    [SerializeField] ParticleSystem pt_red_fire = null;     //プレイヤーのエフェクト（通常時）
+//    public ParticleSystem pt_blue_fire;                   //プレイヤーのエフェクト（無敵モード時）
+    [SerializeField] GameObject Jet_Effect = null;          //プレイヤーのエフェクト（無敵モード時）
+    [SerializeField] GameObject explosion_effect = null;
 
     //円周上を移動するための変数
     //float player_degree;                                
@@ -50,6 +56,9 @@ public class Player : MonoBehaviour {
 
         //無敵時間の初期化
         invincible_time = default_invincible_time;
+
+        //プレイヤーのエフェクト初期化
+        InvincibleEffectOff();
     }
 
     // Update is called once per frame  
@@ -76,19 +85,23 @@ public class Player : MonoBehaviour {
                 //無敵モードポイントを初期化
                 invincible_point = defaul_invincible_point;
                 Debug.Log("無敵モード解除");
+                //プレイヤーのエフェクト初期化
+                InvincibleEffectOff();
             }
         }
 
-        //無敵モードポイント蓄積・一定値を超えると無敵モード
+        //通常モードの時、無敵モードポイント累積・一定値を超えると無敵モード
         if (invincible_flag == false)
         {
-            //時間経過で無敵モード・ポイントを蓄積
+            //時間経過で無敵モード・ポイントを累積
             invincible_point = Charge();
             //無敵モードフラグを立てる
             if (invincible_point >= MAX_INVINCIBLE_POINT) {
                 invincible_flag = true;
                 Debug.Log("無敵モード！");
                 Debug.Log("無敵モードポイント：" + invincible_point);
+                //プレイヤーのエフェクト変化
+                InvincibleEffectOn();
             }
         }
     }
@@ -125,7 +138,7 @@ public class Player : MonoBehaviour {
         return Mathf.Clamp(fall_speed,MIN_SPEED,MAX_SPEED);
     }
 
-    //時間経過で無敵モードポイントを蓄積
+    //時間経過で無敵モードポイントを累積
     private float Charge()
     {
         invincible_point += add_invincible_point * Time.deltaTime;
@@ -139,6 +152,11 @@ public class Player : MonoBehaviour {
         if (invincible_flag)
         {
             Debug.Log("無敵モード中！");
+            //障害物の爆発エフェクト
+            GameObject new_explosion_effect = Instantiate(explosion_effect ,other.gameObject.transform.position,other.gameObject.transform.rotation) as GameObject;
+            GameObject.Destroy(new_explosion_effect, 1f);
+            //障害物の消滅
+            GameObject.Destroy(other.gameObject);
             return;
         }
 
@@ -150,16 +168,35 @@ public class Player : MonoBehaviour {
             //減速
             fall_speed = SpeedDown();
 
+            //無敵モードポイントの減少
+            invincible_point -= reduced_invincible_point;
+
             //ライフ減少
             player_life -= 1;
             //ライフが０になるとゲームオーバー
-            if(player_life == 0)
+            if(player_life <= 0)
             {
-                Debug.Log("ライフ０");
+                GameObject new_explosion_effect = Instantiate(explosion_effect, gameObject.transform.position, gameObject.transform.rotation) as GameObject;
+                GameObject.Destroy(new_explosion_effect, 3f);
                 GameObject.Destroy(gameObject);
             }
 
         }
+    }
+
+    //プレイヤーのエフェクトの切り替え（無敵モード時）
+    private void InvincibleEffectOn()
+    {
+        Jet_Effect.SetActive(true);
+        //        pt_red_fire.Stop();
+        //        pt_blue_fire.Play();
+    }
+    //プレイヤーのエフェクトの切り替え（通常時）
+    private void InvincibleEffectOff()
+    {
+        pt_red_fire.Play();
+        Jet_Effect.SetActive(false);
+ //       pt_blue_fire.Stop();
     }
 
     //プレイヤーの左右移動関数(矢印キーでの操作)
