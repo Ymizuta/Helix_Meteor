@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33818898864447422}
   - component: {fileID: 23261622987827022}
   - component: {fileID: 64436583674346460}
+  - component: {fileID: 114997035513392000}
   m_Layer: 0
   m_Name: AsteroidLava_Red1
   m_TagString: Obstacle
@@ -55,6 +56,7 @@ GameObject:
   - component: {fileID: 33520683372032568}
   - component: {fileID: 23385431056451284}
   - component: {fileID: 64995848985022460}
+  - component: {fileID: 114636126208968274}
   m_Layer: 0
   m_Name: AsteroidLava_Red2
   m_TagString: Obstacle
@@ -73,6 +75,7 @@ GameObject:
   - component: {fileID: 33045200307161844}
   - component: {fileID: 23329903934730444}
   - component: {fileID: 64964670364582390}
+  - component: {fileID: 114480257829701914}
   m_Layer: 0
   m_Name: AsteroidLava_Red4
   m_TagString: Obstacle
@@ -91,6 +94,7 @@ GameObject:
   - component: {fileID: 33708346357778302}
   - component: {fileID: 23958637395529822}
   - component: {fileID: 64218648313594596}
+  - component: {fileID: 114381383584315824}
   m_Layer: 0
   m_Name: AsteroidLava_Red1 (1)
   m_TagString: Obstacle
@@ -391,3 +395,47 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300002, guid: e6958b1959e6e924ca8f5151bf649c01, type: 3}
+--- !u!114 &114381383584315824
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1890961064318908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9913606f122277d429f14ef9d97a8167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114480257829701914
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1874434384986150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9913606f122277d429f14ef9d97a8167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114636126208968274
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1473129083521266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9913606f122277d429f14ef9d97a8167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114997035513392000
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1250368648395624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9913606f122277d429f14ef9d97a8167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

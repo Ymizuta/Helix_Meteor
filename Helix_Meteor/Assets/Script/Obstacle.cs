@@ -4,13 +4,10 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
+    private float rotation_speed_x = -60;
+
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        transform.Rotate(new Vector3(rotation_speed_x, 0, 0) * Time.deltaTime, Space.World);
+    }
 }

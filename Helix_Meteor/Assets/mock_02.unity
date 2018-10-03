@@ -231,6 +231,8 @@ GameObject:
   - component: {fileID: 133911197}
   - component: {fileID: 133911196}
   - component: {fileID: 133911195}
+  - component: {fileID: 133911199}
+  - component: {fileID: 133911198}
   m_Layer: 0
   m_Name: AsteroidLava_Red2 (1)
   m_TagString: Obstacle
@@ -311,6 +313,28 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 133911193}
   m_Mesh: {fileID: 4300002, guid: e6958b1959e6e924ca8f5151bf649c01, type: 3}
+--- !u!114 &133911198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 133911193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9913606f122277d429f14ef9d97a8167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &133911199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 133911193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9913606f122277d429f14ef9d97a8167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &141006002 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4572234024848888, guid: 056a33b624f71c04aa602367501c070e,
@@ -453,6 +477,7 @@ GameObject:
   - component: {fileID: 238790220}
   - component: {fileID: 238790219}
   - component: {fileID: 238790218}
+  - component: {fileID: 238790221}
   m_Layer: 0
   m_Name: AsteroidLava_Red1 (2)
   m_TagString: Obstacle
@@ -533,6 +558,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 238790216}
   m_Mesh: {fileID: 4300000, guid: e6958b1959e6e924ca8f5151bf649c01, type: 3}
+--- !u!114 &238790221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 238790216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9913606f122277d429f14ef9d97a8167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &283556888
 Prefab:
   m_ObjectHideFlags: 0
@@ -608,6 +644,7 @@ GameObject:
   - component: {fileID: 337709592}
   - component: {fileID: 337709591}
   - component: {fileID: 337709590}
+  - component: {fileID: 337709593}
   m_Layer: 0
   m_Name: AsteroidLava_Red4 (1)
   m_TagString: Obstacle
@@ -688,6 +725,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 337709588}
   m_Mesh: {fileID: 4300006, guid: e6958b1959e6e924ca8f5151bf649c01, type: 3}
+--- !u!114 &337709593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 337709588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9913606f122277d429f14ef9d97a8167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &387364241 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4572234024848888, guid: 056a33b624f71c04aa602367501c070e,
@@ -6015,6 +6063,7 @@ GameObject:
   - component: {fileID: 813199009}
   - component: {fileID: 813199008}
   - component: {fileID: 813199007}
+  - component: {fileID: 813199010}
   m_Layer: 0
   m_Name: AsteroidLava_Red4 (1)
   m_TagString: Obstacle
@@ -6095,6 +6144,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 813199005}
   m_Mesh: {fileID: 4300006, guid: e6958b1959e6e924ca8f5151bf649c01, type: 3}
+--- !u!114 &813199010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 813199005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9913606f122277d429f14ef9d97a8167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &813448064 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4572234024848888, guid: 056a33b624f71c04aa602367501c070e,
@@ -11353,6 +11413,7 @@ GameObject:
   - component: {fileID: 1201800816}
   - component: {fileID: 1201800815}
   - component: {fileID: 1201800814}
+  - component: {fileID: 1201800817}
   m_Layer: 0
   m_Name: AsteroidLava_Red1 (2)
   m_TagString: Obstacle
@@ -11433,6 +11494,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1201800812}
   m_Mesh: {fileID: 4300000, guid: e6958b1959e6e924ca8f5151bf649c01, type: 3}
+--- !u!114 &1201800817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1201800812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9913606f122277d429f14ef9d97a8167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1207654712
 Prefab:
   m_ObjectHideFlags: 0
@@ -12389,6 +12461,7 @@ GameObject:
   - component: {fileID: 1472797342}
   - component: {fileID: 1472797341}
   - component: {fileID: 1472797340}
+  - component: {fileID: 1472797343}
   m_Layer: 0
   m_Name: AsteroidLava_Red4 (1)
   m_TagString: Obstacle
@@ -12469,6 +12542,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1472797338}
   m_Mesh: {fileID: 4300006, guid: e6958b1959e6e924ca8f5151bf649c01, type: 3}
+--- !u!114 &1472797343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1472797338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9913606f122277d429f14ef9d97a8167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1485648169
 Prefab:
   m_ObjectHideFlags: 0
@@ -17488,6 +17572,7 @@ GameObject:
   - component: {fileID: 1740543332}
   - component: {fileID: 1740543331}
   - component: {fileID: 1740543330}
+  - component: {fileID: 1740543333}
   m_Layer: 0
   m_Name: AsteroidLava_Red2 (1)
   m_TagString: Obstacle
@@ -17568,6 +17653,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1740543328}
   m_Mesh: {fileID: 4300002, guid: e6958b1959e6e924ca8f5151bf649c01, type: 3}
+--- !u!114 &1740543333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1740543328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9913606f122277d429f14ef9d97a8167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1772139391
 GameObject:
   m_ObjectHideFlags: 0
@@ -17580,6 +17676,8 @@ GameObject:
   - component: {fileID: 1772139395}
   - component: {fileID: 1772139394}
   - component: {fileID: 1772139393}
+  - component: {fileID: 1772139397}
+  - component: {fileID: 1772139396}
   m_Layer: 0
   m_Name: AsteroidLava_Red4 (1)
   m_TagString: Obstacle
@@ -17660,6 +17758,28 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1772139391}
   m_Mesh: {fileID: 4300006, guid: e6958b1959e6e924ca8f5151bf649c01, type: 3}
+--- !u!114 &1772139396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1772139391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9913606f122277d429f14ef9d97a8167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1772139397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1772139391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9913606f122277d429f14ef9d97a8167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1773080963
 Prefab:
   m_ObjectHideFlags: 0
