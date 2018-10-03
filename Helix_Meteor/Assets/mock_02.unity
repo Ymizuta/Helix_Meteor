@@ -6357,7 +6357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player_: {fileID: 1941316774}
-  meteor_camera_: {fileID: 0}
+  meteor_camera_: {fileID: 1030605458}
 --- !u!4 &1029647630
 Transform:
   m_ObjectHideFlags: 0
@@ -6462,6 +6462,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player_: {fileID: 1941316774}
+  PlayerObj: {fileID: 1941316768}
 --- !u!45 &1030605459
 Skybox:
   m_ObjectHideFlags: 0
@@ -18068,11 +18069,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Controller_: {fileID: 1029647629}
+  PlayerObj: {fileID: 1941316768}
   player_poz: {x: 0, y: 0, z: 0}
-  player_life: 0
-  fall_speed: 0.5
-  reduce_speed: 1
-  invincible_point: 0
   pt_red_fire: {fileID: 1357314265}
   Jet_Effect: {fileID: 964166409}
   explosion_effect: {fileID: 1000011797152326, guid: acf39d9f4addf294d93fa56fa373961b,

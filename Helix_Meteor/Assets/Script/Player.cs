@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour {
 
     [SerializeField] Controller Controller_ = null;         //エディターからアタッチする
+    [SerializeField] GameObject PlayerObj = null;           //エディターからアタッチする(nullチェック用)
 
     //プレイヤーの位置に関する変数
     public Vector3 player_poz;                              //プレイヤーの位置
@@ -110,6 +111,11 @@ public class Player : MonoBehaviour {
     //プレイヤーの上下左右斜め移動関数(スワイプ/マウスドラッグによる操作)
     public void Move(Vector3 move_direction,float move_speed)
     {
+        //nullcheck?
+        if (PlayerObj == null)
+        {
+            return;
+        }
         Vector3 temp_player_poz = gameObject.transform.position;
         temp_player_poz += move_direction * move_speed;
         temp_player_poz.x = Mathf.Clamp(temp_player_poz.x,MIN_X_POSITION,MAX_X_POSITION);
@@ -160,25 +166,23 @@ public class Player : MonoBehaviour {
             return;
         }
 
-        Debug.Log("衝突！");
-        //障害物に衝突した時に減速
+        //障害物に衝突した時の処理
         if (other.gameObject.tag == "Obstacle")
         {
-            Debug.Log("減速");
+            Debug.Log("衝突！");
+            Debug.Log("減速！");
             //減速
             fall_speed = SpeedDown();
-
             //無敵モードポイントの減少
             invincible_point -= reduced_invincible_point;
-
             //ライフ減少
             player_life -= 1;
+            
+
             //ライフが０になるとゲームオーバー
             if(player_life <= 0)
             {
-                GameObject new_explosion_effect = Instantiate(explosion_effect, gameObject.transform.position, gameObject.transform.rotation) as GameObject;
-                GameObject.Destroy(new_explosion_effect, 3f);
-                GameObject.Destroy(gameObject);
+                PlayerDie();
             }
         }
     }
@@ -190,6 +194,7 @@ public class Player : MonoBehaviour {
         //        pt_red_fire.Stop();
         //        pt_blue_fire.Play();
     }
+
     //プレイヤーのエフェクトの切り替え（通常時）
     private void InvincibleEffectOff()
     {
@@ -246,7 +251,8 @@ public class Player : MonoBehaviour {
             return false;
         }
     }
-
+    
+    //無敵モードに切り替え
     private void InvincibleModeOn()
     {
         //時間経過で無敵モード・ポイントを累積
@@ -261,7 +267,7 @@ public class Player : MonoBehaviour {
             InvincibleEffectOn();
         }
     }
-
+    //無敵モードを解除
     private void InvincibleModeOff()
     {
         //無敵モードフラグ解除
@@ -273,6 +279,20 @@ public class Player : MonoBehaviour {
         Debug.Log("無敵モード解除");
         //プレイヤーのエフェクト初期化
         InvincibleEffectOff();
+    }
+    //プレイヤーDestroy時にメンバ変数にnull格納
+    private void OnDestroy()
+    {
+        Debug.Log("死亡！");
+        Controller_ = null;
+        PlayerObj = null;
+    }
+    //プレイヤー死亡時の処理
+    private void PlayerDie()
+    {
+        GameObject new_explosion_effect = Instantiate(explosion_effect, gameObject.transform.position, gameObject.transform.rotation) as GameObject;
+        GameObject.Destroy(new_explosion_effect, 3f);
+        GameObject.Destroy(gameObject);
     }
 
     //プレイヤーの左右移動関数(矢印キーでの操作)

@@ -75,6 +75,7 @@
     <Compile Include="Assets\Script\Controller.cs" />
     <Compile Include="Assets\Script\CreateObstacle.cs" />
     <Compile Include="Assets\Script\MeteorCamera.cs" />
+    <Compile Include="Assets\Script\Obstacle.cs" />
     <Compile Include="Assets\Script\Player.cs" />
     <Compile Include="Assets\Script\PlayerUI.cs" />
     <None Include="Assets\inported_assets\EffectExamples\Shared\Shaders\SurfaceShader_VC.shader" />

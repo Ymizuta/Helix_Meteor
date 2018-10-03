@@ -13,6 +13,7 @@ public class Controller : MonoBehaviour {
     private Vector3 new_player_poz;                 //現在フレームでのタッチ位置（スワイプによる上下左右移動処理用）
     private Vector3 move_direction;                 //上下左右移動の移動方向（Player_.Move関数の引数）
     private float move_speed = 10.0f;               //上下左右移動のスピード調整用の値（Player_.Move関数の引数）
+    float lifetime = 0.1f;
 
     //円状移動のための列挙型
     //public enum Direction
@@ -58,6 +59,15 @@ public class Controller : MonoBehaviour {
         if (info == TouchInfo.Ended)
         {
         }
+
+        //画面振動させる処理
+        //if (player_.Player_life < 3)
+        //{
+        //    if (lifetime > 0) {
+        //        meteor_camera_.Shake_Camera();
+        //        lifetime -= Time.deltaTime;
+        //    }
+        //}
 
         //左右入力取得（キーボード操作・円状移動）
         //Direction direction;
