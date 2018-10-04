@@ -6,6 +6,10 @@ public class Player : MonoBehaviour {
 
     [SerializeField] Controller Controller_ = null;         //エディターからアタッチする
     [SerializeField] GameObject PlayerObj = null;           //エディターからアタッチする(nullチェック用)
+    [SerializeField] GameObject MainUIPanel_ = null;
+//    [SerializeField] GameObject StartButton_ = null;
+    [SerializeField] GameObject ContinueButton_ = null;
+    [SerializeField] GameObject RetryButton_ = null;
 
     //プレイヤーの位置に関する変数
     public Vector3 player_poz;                              //プレイヤーの位置
@@ -14,7 +18,7 @@ public class Player : MonoBehaviour {
     const float MIN_Y_POSITION = -3;
     const float MAX_Y_POSITION = 3;
     //プレイヤーのライフに関する変数
-    private int default_player_life = 3;                    //プレイヤーのライフ初期値
+    private int default_player_life = 1;                    //プレイヤーのライフ初期値
     private int player_life;                                 //プレイヤーのライフ
     //プレイヤーの速度に関する変数
     private float default_fall_speed = 0.5f;                //前方に移動する初期速度
@@ -30,7 +34,7 @@ public class Player : MonoBehaviour {
     private float add_invincible_point = 1.0f;              //加算される無敵モードポイント
     private float reduced_invincible_point = 1.0f;          //減じられる無敵モードポイント
     const float MIN_INVINCIBLE_POINT = 0f;                  //無敵モードポイントの下限値
-    const float MAX_INVINCIBLE_POINT = 5.0f;                //無敵モードポイントの上限値
+    const float MAX_INVINCIBLE_POINT = 10.0f;                //無敵モードポイントの上限値
     //無敵時間に関する変数
     private float default_invincible_time = 0f;             //無敵モード中の経過時間の初期値
     private float invincible_time;                          //無敵モード中の経過時間（累積）
@@ -53,19 +57,14 @@ public class Player : MonoBehaviour {
     {
         //プレイヤー位置格納
         player_poz = gameObject.transform.position;
-        
         //ライフ初期化
         player_life = default_player_life;
-
         //直進スピードの初期化
         fall_speed = default_fall_speed;
-
         //無敵モード・ポイントの初期化
         invincible_point = defaul_invincible_point;
-
         //無敵時間の初期化
         invincible_time = default_invincible_time;
-
         //プレイヤーのエフェクト初期化
         InvincibleEffectOff();
     }
@@ -177,7 +176,6 @@ public class Player : MonoBehaviour {
             invincible_point -= reduced_invincible_point;
             //ライフ減少
             player_life -= 1;
-            
 
             //ライフが０になるとゲームオーバー
             if(player_life <= 0)
@@ -292,6 +290,14 @@ public class Player : MonoBehaviour {
     {
         GameObject new_explosion_effect = Instantiate(explosion_effect, gameObject.transform.position, gameObject.transform.rotation) as GameObject;
         GameObject.Destroy(new_explosion_effect, 3f);
+        //UI
+        MainUIPanel_.SetActive(true);
+        ContinueButton_.SetActive(true);
+        RetryButton_.SetActive(true);
+        //死に際に現在地を渡す（コンティニューでの復活用）
+        ContinueButton_.GetComponent<UIController>().DyingPosition = transform.position;
+        
+        //プレイヤー消滅
         GameObject.Destroy(gameObject);
     }
 

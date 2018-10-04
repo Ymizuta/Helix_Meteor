@@ -28,7 +28,8 @@ public class MeteorCamera : MonoBehaviour {
         }
         //プレイヤーに追従
         camera_poz = gameObject.transform.position;
-        camera_positionz = Player_.transform.position.z - distance_from_player;
+//        camera_positionz = Player_.transform.position.z - distance_from_player;
+        camera_positionz = PlayerObj.transform.position.z - distance_from_player;
         camera_poz.z = camera_positionz;
         ////上下左右に振動
         //shake_range_x = Random.Range(MIN_SHAKE_RANGE_X,MAX_SHAKE_RANGE_X);
@@ -38,7 +39,7 @@ public class MeteorCamera : MonoBehaviour {
         //カメラ位置を指定
         gameObject.transform.position = camera_poz;
     }
-
+    //カメラを振動させる
     public void Shake_Camera()
     {
         //プレイヤーに追従
@@ -52,5 +53,13 @@ public class MeteorCamera : MonoBehaviour {
         camera_poz.y = shake_range_y;
         //カメラ位置を指定
         gameObject.transform.position = camera_poz;
+    }
+
+    public GameObject PlayerObjPro
+    {
+        set
+        {
+            PlayerObj = value;
+        }
     }
 }
