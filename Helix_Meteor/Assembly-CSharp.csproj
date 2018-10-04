@@ -78,6 +78,7 @@
     <Compile Include="Assets\Script\Obstacle.cs" />
     <Compile Include="Assets\Script\Player.cs" />
     <Compile Include="Assets\Script\PlayerUI.cs" />
+    <Compile Include="Assets\Script\UIController.cs" />
     <None Include="Assets\inported_assets\EffectExamples\Shared\Shaders\SurfaceShader_VC.shader" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/workspace/Helix_Meteor/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
