@@ -63,6 +63,8 @@ public class Player : MonoBehaviour {
         player_poz = gameObject.transform.position;
         //ライフ初期化
         player_life = default_player_life;
+        //UIにライフの値を渡す
+        GameManager_.GetComponent<UIController>().PlayerLife = player_life;
         //直進スピードの初期化
         fall_speed = default_fall_speed;
         //無敵モード・ポイントの初期化
@@ -189,6 +191,8 @@ public class Player : MonoBehaviour {
             invincible_point -= reduced_invincible_point;
             //ライフ減少
             player_life -= 1;
+            //UIにライフの値を渡す
+            GameManager_.GetComponent<UIController>().PlayerLife = player_life;
             //ノーダメージ処理
             NoDamageModeOn();
 

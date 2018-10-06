@@ -19,12 +19,14 @@ public class UIController : MonoBehaviour {
     [SerializeField] GameObject ContinueButton_ = null;
     [SerializeField] GameObject RetryButton_ = null;
     [SerializeField] Controller Controller_ = null;
-
+    //タイム計測
     private bool time_count_flag = false;
     private float play_time_minute;
     private float play_time_seconds;
+    //プレイヤークラスから値を受け取る変数
     private Vector3 dying_position;
     private bool player_die_flag;
+    private int player_life;
 
     private void Start()
     {
@@ -36,12 +38,15 @@ public class UIController : MonoBehaviour {
 
     private void Update()
     {
-        //時間計測
+        //タイムを計測しUIに反映
         if (time_count_flag)
         {
             CountTime();
         }
         
+        //ライフをUIに反映
+        LifeText.GetComponent<Text>().text = "LIFE:" + player_life.ToString();
+
         //プレイヤー死亡を検知（Player.csから受け取った値で検知）
         if (player_die_flag)
         {
@@ -149,4 +154,11 @@ public class UIController : MonoBehaviour {
         }
     }
 
+    //
+    public int PlayerLife
+    {
+        set{
+            player_life = value; 
+        }
+    }
 }
