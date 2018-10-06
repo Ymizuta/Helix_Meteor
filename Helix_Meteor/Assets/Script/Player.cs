@@ -50,10 +50,14 @@ public class Player : MonoBehaviour {
     const float MAX_NO_DAMAGE_TIME = 1.0f;
 
     //演出
-    [SerializeField] ParticleSystem pt_red_fire = null;     //プレイヤーのエフェクト（通常時）
-//    public ParticleSystem pt_blue_fire;                   //プレイヤーのエフェクト（無敵モード時）
-    [SerializeField] GameObject Jet_Effect = null;          //プレイヤーのエフェクト（無敵モード時）
-    [SerializeField] GameObject explosion_effect = null;
+    [SerializeField] ParticleSystem pt_red_fire = null;     //プレイヤーのエフェクト（通常時・赤い炎）
+//    public ParticleSystem pt_blue_fire;                   //プレイヤーのエフェクト（無敵モード時・青い炎）
+    [SerializeField] GameObject Jet_Effect = null;          //プレイヤーのエフェクト（無敵モード時・効果線）
+    [SerializeField] GameObject Inpact_Effect = null;       //被ダメージ時の爆発エフェクト
+    [SerializeField] GameObject explosion_effect = null;    //死亡時の爆発エフェクト
+
+    //被ダメージ時の画面エフェクト用フラグ
+    private bool damaged_flag;
 
     private void Start()
     {
@@ -195,9 +199,14 @@ public class Player : MonoBehaviour {
             GameManager_.GetComponent<UIController>().PlayerLife = player_life;
             //ノーダメージ処理
             NoDamageModeOn();
+            //画面エフェクトフラグ
+            GameManager_.GetComponent<UIController>().DamagedFlag = true;
+            //衝突エフェクト・効果音
+            GameObject new_inpact_effect = Instantiate(Inpact_Effect, transform.position, transform.rotation) as GameObject;
+            GameObject.Destroy(new_inpact_effect, 1f);
 
             //ライフが０になるとゲームオーバー
-            if(player_life <= 0)
+            if (player_life <= 0)
             {
                 PlayerDie();
             }
@@ -311,6 +320,7 @@ public class Player : MonoBehaviour {
     //プレイヤー死亡時の処理
     private void PlayerDie()
     {
+        //エフェクト・効果音
         GameObject new_explosion_effect = Instantiate(explosion_effect, gameObject.transform.position, gameObject.transform.rotation) as GameObject;
         GameObject.Destroy(new_explosion_effect, 3f);
 

@@ -19,6 +19,13 @@ public class UIController : MonoBehaviour {
     [SerializeField] GameObject ContinueButton_ = null;
     [SerializeField] GameObject RetryButton_ = null;
     [SerializeField] Controller Controller_ = null;
+    //エフェクト関連
+    [SerializeField] GameObject DamageImage = null;
+    private Image damage_img;
+    private bool damaged_flag;
+    private AudioSource audio_source;
+    [SerializeField] AudioClip inpact_sound = null;         //被ダメージ時の効果音
+    [SerializeField] AudioClip explosion_sound = null;      //死亡時の効果音
     //タイム計測
     private bool time_count_flag = false;
     private float play_time_minute;
@@ -34,10 +41,18 @@ public class UIController : MonoBehaviour {
         StartButton_.GetComponent<Button>().onClick.AddListener(PushStartButton);
         ContinueButton_.GetComponent<Button>().onClick.AddListener(PushContinueButton);
         RetryButton_.GetComponent<Button>().onClick.AddListener(PushRetryButton);
+        //ダメージエフェクト用のImage設定
+        damage_img = DamageImage.GetComponent<Image>();
+        damage_img.color = Color.clear;
+        //オーディオソース設定
+        audio_source = gameObject.GetComponent<AudioSource>();
     }
 
     private void Update()
     {
+        //被ダメージのエフェクト
+        DamagedEffect();
+
         //タイムを計測しUIに反映
         if (time_count_flag)
         {
@@ -50,6 +65,7 @@ public class UIController : MonoBehaviour {
         //プレイヤー死亡を検知（Player.csから受け取った値で検知）
         if (player_die_flag)
         {
+            //フラグ設定
             time_count_flag = false;
             MainPanel_.SetActive(true);
             ContinueButton_.SetActive(true);
@@ -129,11 +145,33 @@ public class UIController : MonoBehaviour {
         }
         PlayTimeText.GetComponent<Text>().text = play_time_minute.ToString("00") + ":" + play_time_seconds.ToString("00");
     }
-
+    //タイムカウンタのUIをリセット
     private void ResetTime()
     {
         play_time_minute = 0;
         play_time_seconds = 0;
+    }
+
+    //被ダメージのエフェクト
+    public void DamagedEffect()
+    {
+        if (damaged_flag)
+        {
+            //生存時：通常の被弾音　死亡時：爆発音
+            if (player_die_flag)
+            {
+                audio_source.PlayOneShot(explosion_sound);
+            }
+            else{
+                audio_source.PlayOneShot(inpact_sound);
+            }
+            damage_img.color = new Color(0.5f, 0f, 0f, 0.5f);
+            damaged_flag = false;
+        }
+        else
+        {
+            damage_img.color = Color.Lerp(damage_img.color, Color.clear, Time.deltaTime);
+        }
     }
 
     //セッター（プレイヤー死亡時にコンティニュー用に位置を受け取る）
@@ -154,11 +192,21 @@ public class UIController : MonoBehaviour {
         }
     }
 
-    //
+    //セッター（プレイヤーライフUI用）
     public int PlayerLife
     {
         set{
             player_life = value; 
         }
     }
+
+    //セッター（ダメージエフェクト用）
+    public bool DamagedFlag
+    {
+        set
+        {
+            damaged_flag = value;
+        }
+    }
+
 }
