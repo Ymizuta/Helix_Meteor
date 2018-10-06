@@ -58,7 +58,6 @@ public class Controller : MonoBehaviour {
             move_direction = new_player_poz - old_player_poz;
 
             //プレイヤー上下左右移動
-//            player_.Move(move_direction,move_speed);
             PlayerObj.GetComponent<Player>().Move(move_direction, move_speed);
 
             //次フレームでの移動処理のためold_player_pozに現在のフレームのタッチ位置(new_player_poz)を格納

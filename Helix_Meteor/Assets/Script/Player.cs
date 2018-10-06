@@ -1,15 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 
     [SerializeField] Controller Controller_ = null;         //エディターからアタッチする
     [SerializeField] GameObject PlayerObj = null;           //エディターからアタッチする(nullチェック用)
-    [SerializeField] GameObject MainUIPanel_ = null;
-//    [SerializeField] GameObject StartButton_ = null;
-    [SerializeField] GameObject ContinueButton_ = null;
-    [SerializeField] GameObject RetryButton_ = null;
+    [SerializeField] GameObject GameManager_ = null;
+    public GameObject MainUIPanel_ = null;
+    //    [SerializeField] GameObject StartButton_ = null;
+    public GameObject ContinueButton_ = null;
+    public GameObject RetryButton_ = null;
 
     //プレイヤーの位置に関する変数
     public Vector3 player_poz;                              //プレイヤーの位置
@@ -55,6 +57,12 @@ public class Player : MonoBehaviour {
 
     private void Start()
     {
+        //UI取得
+        GameManager_ = GameObject.Find("GameManager");
+        MainUIPanel_ = GameObject.Find("MainUIPanel");
+        RetryButton_ = GameManager_.GetComponent<UIController>().RetryButton;
+        ContinueButton_ = GameManager_.GetComponent<UIController>().ContinueButton;
+
         //プレイヤー位置格納
         player_poz = gameObject.transform.position;
         //ライフ初期化
@@ -290,12 +298,14 @@ public class Player : MonoBehaviour {
     {
         GameObject new_explosion_effect = Instantiate(explosion_effect, gameObject.transform.position, gameObject.transform.rotation) as GameObject;
         GameObject.Destroy(new_explosion_effect, 3f);
-        //UI
-        MainUIPanel_.SetActive(true);
-        ContinueButton_.SetActive(true);
-        RetryButton_.SetActive(true);
+
+        //UIを表示
+        //        MainUIPanel_.SetActive(true);
+        GameManager_.GetComponent<UIController>().ui_flag = true;
+
         //死に際に現在地を渡す（コンティニューでの復活用）
-        ContinueButton_.GetComponent<UIController>().DyingPosition = transform.position;
+        //        ContinueButton_.GetComponent<UIController>().DyingPosition = transform.position;
+        GameManager_.GetComponent<UIController>().DyingPosition = transform.position;
         
         //プレイヤー消滅
         GameObject.Destroy(gameObject);

@@ -528,14 +528,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24030c68de4a7174db7aa39326529bad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Controller_: {fileID: 114590482153781720, guid: 49e61dded6334de4b89f62944991285d,
-    type: 2}
+  Controller_: {fileID: 0}
   PlayerObj: {fileID: 1676777033290544}
-  MainUIPanel_: {fileID: 1366710325274942, guid: a238576e47f50d14ea5b9984a7415147,
+  GameManager_: {fileID: 1972286773717126, guid: 49e61dded6334de4b89f62944991285d,
     type: 2}
-  ContinueButton_: {fileID: 1660037888937472, guid: a238576e47f50d14ea5b9984a7415147,
+  MainUIPanel_: {fileID: 1251866462541504, guid: a238576e47f50d14ea5b9984a7415147,
     type: 2}
-  RetryButton_: {fileID: 1853487858499778, guid: a238576e47f50d14ea5b9984a7415147,
+  ContinueButton_: {fileID: 1773233131622924, guid: a238576e47f50d14ea5b9984a7415147,
+    type: 2}
+  RetryButton_: {fileID: 1508456697210292, guid: a238576e47f50d14ea5b9984a7415147,
     type: 2}
   player_poz: {x: 0, y: 0, z: 0}
   pt_red_fire: {fileID: 198040303310044342}

@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class test_circle_move : MonoBehaviour {
 
     float deg;
+    public Button test_button;
 
     // Use this for initialization
     void Start () {
@@ -36,6 +38,12 @@ public class test_circle_move : MonoBehaviour {
             //Debug.Log(y);
 
             gameObject.transform.position = new Vector3(x, y, 0);
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+            Debug.Log("消えよ");
+            test_button.enabled = false;
         }
 	}
  }
