@@ -20,7 +20,7 @@ public class Player : MonoBehaviour {
     const float MIN_Y_POSITION = -3;
     const float MAX_Y_POSITION = 3;
     //プレイヤーのライフに関する変数
-    private int default_player_life = 1;                    //プレイヤーのライフ初期値
+    private int default_player_life = 3;                    //プレイヤーのライフ初期値
     private int player_life;                                 //プレイヤーのライフ
     //プレイヤーの速度に関する変数
     private float default_fall_speed = 0.5f;                //前方に移動する初期速度
@@ -36,12 +36,18 @@ public class Player : MonoBehaviour {
     private float add_invincible_point = 1.0f;              //加算される無敵モードポイント
     private float reduced_invincible_point = 1.0f;          //減じられる無敵モードポイント
     const float MIN_INVINCIBLE_POINT = 0f;                  //無敵モードポイントの下限値
-    const float MAX_INVINCIBLE_POINT = 10.0f;                //無敵モードポイントの上限値
+    const float MAX_INVINCIBLE_POINT = 60.0f;                //無敵モードポイントの上限値
     //無敵時間に関する変数
     private float default_invincible_time = 0f;             //無敵モード中の経過時間の初期値
     private float invincible_time;                          //無敵モード中の経過時間（累積）
     private float add_invincible_time = 1.0f;               //加算される無敵モード中の経過時間
     const float MAX_INVINCIBLE_TIME = 5.0f;                 //無敵モード時間の上限
+    //被ダメージ直後のノーダメージタイムに関する変数
+    private bool no_damage_flag;
+    private float default_no_damage_time =0f;
+    private float no_damage_time;
+    private float add_no_damage_time = 1.0f;
+    const float MAX_NO_DAMAGE_TIME = 1.0f;
 
     //演出
     [SerializeField] ParticleSystem pt_red_fire = null;     //プレイヤーのエフェクト（通常時）
@@ -49,20 +55,10 @@ public class Player : MonoBehaviour {
     [SerializeField] GameObject Jet_Effect = null;          //プレイヤーのエフェクト（無敵モード時）
     [SerializeField] GameObject explosion_effect = null;
 
-    //円周上を移動するための変数
-    //float player_degree;                                
-    //float move_speed = 5f;                               //左右移動の速度
-    //float height = 3f;
-    //float width = 3f;
-
     private void Start()
     {
-        //UI取得
+        //GM取得
         GameManager_ = GameObject.Find("GameManager");
-        MainUIPanel_ = GameObject.Find("MainUIPanel");
-        RetryButton_ = GameManager_.GetComponent<UIController>().RetryButton;
-        ContinueButton_ = GameManager_.GetComponent<UIController>().ContinueButton;
-
         //プレイヤー位置格納
         player_poz = gameObject.transform.position;
         //ライフ初期化
@@ -86,6 +82,16 @@ public class Player : MonoBehaviour {
         //時間経過でプレイヤーの直進スピードアップ
         fall_speed = SpeedUp();
 
+        //被ダメージ直後のノーダメージタイム（数秒間・即死防止用）
+        if (no_damage_flag)
+        {
+            no_damage_time += add_no_damage_time * Time.deltaTime;
+            if (NoDamageTimeOver())
+            {
+                NoDamageModeOff();
+            }
+        }
+
         //無敵モードの時、一定時間経過で無敵モード解除・無敵モードポイント初期化
         if (invincible_flag)
         {
@@ -98,7 +104,7 @@ public class Player : MonoBehaviour {
             }
         }
 
-        //通常モードの時、無敵モードポイント累積・一定値を超えると無敵モード
+        //通常モードの時、無敵モードポイントを累積→一定値を超えると無敵モードへ移行
         if (invincible_flag == false)
         {
             InvincibleModeOn();
@@ -177,13 +183,14 @@ public class Player : MonoBehaviour {
         if (other.gameObject.tag == "Obstacle")
         {
             Debug.Log("衝突！");
-            Debug.Log("減速！");
             //減速
             fall_speed = SpeedDown();
             //無敵モードポイントの減少
             invincible_point -= reduced_invincible_point;
             //ライフ減少
             player_life -= 1;
+            //ノーダメージ処理
+            NoDamageModeOn();
 
             //ライフが０になるとゲームオーバー
             if(player_life <= 0)
@@ -231,6 +238,10 @@ public class Player : MonoBehaviour {
         get
         {
             return invincible_point;
+        }
+        set
+        {
+            invincible_point = value;
         }
     }
 
@@ -300,35 +311,40 @@ public class Player : MonoBehaviour {
         GameObject.Destroy(new_explosion_effect, 3f);
 
         //UIを表示
-        //        MainUIPanel_.SetActive(true);
-        GameManager_.GetComponent<UIController>().ui_flag = true;
+        GameManager_.GetComponent<UIController>().PlayerDieFlag = true;
 
         //死に際に現在地を渡す（コンティニューでの復活用）
-        //        ContinueButton_.GetComponent<UIController>().DyingPosition = transform.position;
         GameManager_.GetComponent<UIController>().DyingPosition = transform.position;
         
         //プレイヤー消滅
         GameObject.Destroy(gameObject);
     }
 
-    //プレイヤーの左右移動関数(矢印キーでの操作)
-    //public void Move(Controller.Direction direction)
-    //{
-    //    switch (direction)
-    //    {
-    //        //右に移動
-    //        case Controller.Direction.Right:
-    //            player_degree += move_speed;
-    //            break;
-    //        //左に移動
-    //        case Controller.Direction.Left:
-    //            player_degree -= move_speed;
-    //            break;
-    //        default:
-    //            break;
-    //    }
-    //    player_poz.x = Mathf.Cos(player_degree * Mathf.Deg2Rad) * width;
-    //    player_poz.y = Mathf.Sin(player_degree * Mathf.Deg2Rad) * height;
-    //    gameObject.transform.position = new Vector3(player_poz.x, player_poz.y, player_poz.z);
-    //}
+    //被ダメージ直後のノーダメージタイム移行（即死防止）
+    public void NoDamageModeOn()
+    {
+        gameObject.GetComponent<SphereCollider>().enabled = false;
+        no_damage_flag = true;
+        Debug.Log("ノーダメージ中！");
+    }
+    //被ダメージ直後のノーダメージタイム解除（即死防止）
+    private void NoDamageModeOff()
+    {
+        gameObject.GetComponent<SphereCollider>().enabled = true;
+        no_damage_time = default_no_damage_time;
+        no_damage_flag = false;
+        Debug.Log("ノーダメージ解除！");
+    }
+    //被ダメージ直後のノーダメージタイムの解除判定の関数
+    bool NoDamageTimeOver()
+    {
+    if (no_damage_time >= MAX_NO_DAMAGE_TIME)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }           
+    }
 }
