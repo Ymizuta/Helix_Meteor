@@ -13,6 +13,7 @@ public class UIController : MonoBehaviour {
     //表示UI（ライフ、タイム等）
     [SerializeField] GameObject LifeText = null;
     [SerializeField] GameObject PlayTimeText = null;
+    [SerializeField] GameObject ClearMassage= null;
     //操作UI（スタート、リトライ等のボタン）
     [SerializeField] GameObject MainPanel_ = null;
     [SerializeField] GameObject StartButton_ = null;
@@ -22,7 +23,6 @@ public class UIController : MonoBehaviour {
     //エフェクト関連
     [SerializeField] GameObject DamageImage = null;
     private Image damage_img;
-    private bool damaged_flag;
     private AudioSource audio_source;
     [SerializeField] AudioClip inpact_sound = null;         //被ダメージ時の効果音
     [SerializeField] AudioClip explosion_sound = null;      //死亡時の効果音
@@ -31,9 +31,11 @@ public class UIController : MonoBehaviour {
     private float play_time_minute;
     private float play_time_seconds;
     //プレイヤークラスから値を受け取る変数
-    private Vector3 dying_position;
-    private bool player_die_flag;
-    private int player_life;
+    private Vector3 dying_position;                         //プレイヤー消滅位置
+    private bool player_die_flag;                           //プレイヤー死亡フラグ
+    private int player_life;                                //プレイヤーのライフ
+    private bool damaged_flag;                              //被ダメージ時のフラグ
+    private bool stage_clear_flag;                          //ステージクリアのフラグ
 
     private void Start()
     {
@@ -50,10 +52,18 @@ public class UIController : MonoBehaviour {
 
     private void Update()
     {
+        //クリア時の処理
+        if (stage_clear_flag)
+        {
+            ClearMassage.SetActive(true);
+            ClearMassage.GetComponent<Text>().color = new Color(255f,255f,255f,Mathf.PingPong(Time.time,1));
+            return;
+        }
+
         //被ダメージのエフェクト
         DamagedEffect();
 
-        //タイムを計測しUIに反映
+        //タイムを計測しタイマーUIに反映
         if (time_count_flag)
         {
             CountTime();
@@ -206,6 +216,15 @@ public class UIController : MonoBehaviour {
         set
         {
             damaged_flag = value;
+        }
+    }
+
+    //セッター（ステージクリア）
+    public bool StageClearFlag
+    {
+        set
+        {
+            stage_clear_flag = true;
         }
     }
 

@@ -28,7 +28,7 @@ public class Player : MonoBehaviour {
     private float add_speed = 0.1f;                         //時間経過で加算されるプレイヤーの直進速度
     private float reduce_speed = 1.0f;                       //障害物衝突時に減るプレイヤーの直進速度
     const float MIN_SPEED = 0.5f;                           //プレイヤーの直進スピード下限
-    const float MAX_SPEED = 2.0f;                           //プレイヤーの直進スピード上限
+    const float MAX_SPEED = 1.5f;                           //プレイヤーの直進スピード上限
     //無敵モードポイントに関する変数
     private bool invincible_flag = false;                   //無敵モードフラグ
     private float defaul_invincible_point = 0f;             //無敵モードポイントの初期値
@@ -172,7 +172,17 @@ public class Player : MonoBehaviour {
 
     //オブジェクトに衝突した際の処理の関数
     private void OnTriggerEnter(Collider other)
-    {   
+    {
+        //ゴールした際の処理
+        if (other.gameObject.tag == "Goal")
+        {
+            Debug.Log("ゴール！！");
+            Vector3 transport_poz = new Vector3(0,0,10000);
+            gameObject.transform.position = transport_poz;
+
+            GameManager_.GetComponent<UIController>().StageClearFlag = true;
+        }
+
         //無敵モード時は障害物の影響を受けない
         if (invincible_flag)
         {
