@@ -10365,6 +10365,16 @@ Prefab:
       value: 
       objectReference: {fileID: 1676777033290544, guid: 103c224ec3c4c344d8ca1e34e8634871,
         type: 2}
+    - target: {fileID: 114232125780730284, guid: 49e61dded6334de4b89f62944991285d,
+        type: 2}
+      propertyPath: inpact_sound
+      value: 
+      objectReference: {fileID: 8300000, guid: 222141dd968fb6447b5c790b6d87a27b, type: 3}
+    - target: {fileID: 114232125780730284, guid: 49e61dded6334de4b89f62944991285d,
+        type: 2}
+      propertyPath: explosion_sound
+      value: 
+      objectReference: {fileID: 8300000, guid: 0dcfe736485e63542b5036dc5b360032, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49e61dded6334de4b89f62944991285d, type: 2}
   m_IsPrefabAsset: 0

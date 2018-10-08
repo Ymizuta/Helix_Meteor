@@ -62,6 +62,7 @@ public class Player : MonoBehaviour {
     //コールバック関数
     public System.Action<Vector3> OnPlayerDie;
     public System.Action<int> OnPlayerLifeChaged;
+    public System.Action OnPlayerDamaged;
 
 
     private void Start()
@@ -143,11 +144,11 @@ public class Player : MonoBehaviour {
         {
             return;
         }
-        Vector3 temp_player_poz = gameObject.transform.position;
-        temp_player_poz += move_direction * move_speed;
-        temp_player_poz.x = Mathf.Clamp(temp_player_poz.x,MIN_X_POSITION,MAX_X_POSITION);
-        temp_player_poz.y = Mathf.Clamp(temp_player_poz.y, MIN_Y_POSITION, MAX_Y_POSITION);
-        gameObject.transform.position = temp_player_poz;
+        Vector3 player_poz_ = gameObject.transform.position;
+        player_poz_ += move_direction * move_speed;
+        player_poz_.x = Mathf.Clamp(player_poz_.x,MIN_X_POSITION,MAX_X_POSITION);
+        player_poz_.y = Mathf.Clamp(player_poz_.y, MIN_Y_POSITION, MAX_Y_POSITION);
+        gameObject.transform.position = player_poz_;
     }
 
     //時間経過でプレイヤーを加速する関数
@@ -213,17 +214,20 @@ public class Player : MonoBehaviour {
             invincible_point -= reduced_invincible_point;
             //ライフ減少
             player_life -= 1;
-            //UIにライフの値を渡す
-//            GameManager_.GetComponent<UIController>().PlayerLife = player_life;
-            if(OnPlayerLifeChaged != null)
+            //ライフ減少をUIに反映コールバック
+            if (OnPlayerLifeChaged != null)
             {
                 OnPlayerLifeChaged(player_life);
             }
-
             //ノーダメージ処理
             NoDamageModeOn();
-            //画面エフェクトフラグ
-            GameManager_.GetComponent<UIController>().DamagedFlag = true;
+
+            //画面演出処理用コールバック
+            if (OnPlayerDamaged != null)
+            {
+                OnPlayerDamaged();
+            }
+//            GameManager_.GetComponent<UIController>().DamagedFlag = true;
             //衝突エフェクト・効果音
             GameObject new_inpact_effect = Instantiate(Inpact_Effect, transform.position, transform.rotation) as GameObject;
             GameObject.Destroy(new_inpact_effect, 1f);
@@ -349,15 +353,8 @@ public class Player : MonoBehaviour {
 
         //コールバック
         if (OnPlayerDie != null) {
-            Debug.Log("コールバック！！！");
             OnPlayerDie(transform.position);
-        }
-
-        //UIを表示
-        //GameManager_.GetComponent<UIController>().PlayerDieFlag = true;
-        //死に際に現在地を渡す（コンティニューでの復活用）
-        //GameManager_.GetComponent<UIController>().DyingPosition = transform.position;
-        
+        }        
         //プレイヤー消滅
         GameObject.Destroy(gameObject);
     }

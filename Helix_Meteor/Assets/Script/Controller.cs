@@ -14,6 +14,8 @@ public class Controller : MonoBehaviour {
     [SerializeField] GameObject player_clone_ = null;
     [SerializeField] GameObject meteor_camera_obj_ = null; 
     [SerializeField] UIController ui_controller_ = null;
+    [SerializeField] AudioClip inpact_sound = null;         //被ダメージ時の効果音
+    [SerializeField] AudioClip explosion_sound = null;      //死亡時の効果音
 
     private Vector3 touch_poz;
     private Vector3 old_player_poz;                 //前フレームでのタッチ位置（スワイプによる上下左右移動処理用）
@@ -24,23 +26,26 @@ public class Controller : MonoBehaviour {
     private int play_time;
     //    float lifetime = 0.1f;
 
-    private Vector3 continue_position;
+    private AudioSource audio_source;
+    private Vector3 continue_position;              //コンティニュー時の再開地点
 
     private void Start()
     {
+        audio_source = gameObject.GetComponent<AudioSource>();
         //コールバックするメソッドを登録
         ui_controller_.OnStartButton += this.OnStartButtonCallBack;
         ui_controller_.OnContinueButton += this.OnContinueButtonCallBack;
         ui_controller_.OnRetryButton += this.OnRetryButtonCallBack;
-
     }
 
     // Update is called once per frame
     void Update () {
+        //nullチェック
         if (player_clone_ == null)
         {
             return;
         }
+        
         //タッチ操作
         TouchInfo info = AppUtil.GetTouch();
         if (info == TouchInfo.Began)
@@ -64,10 +69,8 @@ public class Controller : MonoBehaviour {
             new_player_poz.z = 0f;
             //移動のためのベクトルを取得
             move_direction = new_player_poz - old_player_poz;
-
             //プレイヤー上下左右移動
             player_clone_.GetComponent<Player>().Move(move_direction, move_speed);
-
             //次フレームでの移動処理のためold_player_pozに現在のフレームのタッチ位置(new_player_poz)を格納
             old_player_poz = new_player_poz;
         }
@@ -103,19 +106,28 @@ public class Controller : MonoBehaviour {
         //    player_.Move(direction);
         //}
     }
-
-    //プレイヤー被ダメージ時にコールバックされた際の処理
-    public void OnplayerLifeChangedCallBack(int player_life)
+    
+    //プレイヤーがダメージ受けコールバックされた際の処理
+    public void OnPlayerDamagedCallBack()
     {
-        //プレイヤークローンのライフをUIに反映
-        ui_controller_.LifeTextUI.GetComponent<Text>().text = "LIFE:" + player_clone_.GetComponent<Player>().Player_life.ToString();
+        audio_source.PlayOneShot(inpact_sound);
+        ui_controller_.DamagedEffect();
     }
 
     //プレイヤー死亡時にコールバックされた際の処理
     public void OnPlayerDieCallBack(Vector3 player_die_position)
     {
-        ui_controller_.PlayerDieFlag = true;
+        Debug.Log("プレイヤー死亡によりコールバック！");
+        audio_source.PlayOneShot(explosion_sound);
         continue_position = player_die_position;
+        ui_controller_.MenuUiOn();
+    }
+
+    //プレイヤーライフが変更時コールバックされた際の処理
+    public void OnplayerLifeChangedCallBack(int player_life)
+    {
+        //プレイヤークローンのライフをUIに反映
+        ui_controller_.PlayerLifeUI(player_life);
     }
 
     //スタートボタンでコールバックされた際の処理
@@ -127,15 +139,15 @@ public class Controller : MonoBehaviour {
     GameObject new_player = Instantiate(player_prefab_, start_position, gameObject.transform.rotation) as GameObject;
     player_clone_ = new_player;
     player_clone_.SetActive(true);
+
     //プレイヤー死亡時のコールバック関数を登録
     player_clone_.GetComponent<Player>().OnPlayerDie += this.OnPlayerDieCallBack;
-    //プレイヤー被ダメージ時のコールバック関数を登録
+    //プレイヤーライフが変更されたときのコールバック関数を登録
     player_clone_.GetComponent<Player>().OnPlayerLifeChaged += OnplayerLifeChangedCallBack;
+    //プレイヤー被ダメージ時のコールバック関数を登録
+    player_clone_.GetComponent<Player>().OnPlayerDamaged = OnPlayerDamagedCallBack;
     //カメラを設定
     meteor_camera_obj_.GetComponent<MeteorCamera>().PlayerClone = new_player;
-    //UI設定
-    //プレイヤークローンの初期ライフをUIに反映
-    ui_controller_.LifeTextUI.GetComponent<Text>().text = "LIFE:" + player_clone_.GetComponent<Player>().Player_life.ToString();
     }
 
     //コンティニューボタンでコールバックされた際の処理
@@ -147,8 +159,10 @@ public class Controller : MonoBehaviour {
         player_clone_ = new_player;
         //プレイヤー死亡時のコールバック関数を登録
         player_clone_.GetComponent<Player>().OnPlayerDie += this.OnPlayerDieCallBack;
-        //プレイヤー被ダメージ時のコールバック関数を登録
+        //プレイヤーライフが変更された時のコールバック関数を登録
         player_clone_.GetComponent<Player>().OnPlayerLifeChaged += OnplayerLifeChangedCallBack;
+        //プレイヤー被ダメージ時のコールバック関数を登録
+        player_clone_.GetComponent<Player>().OnPlayerDamaged = OnPlayerDamagedCallBack;
         //ノーダメージ期間の実装
         player_clone_.GetComponent<Player>().NoDamageModeOn();
         player_clone_.SetActive(true);
@@ -166,16 +180,18 @@ public class Controller : MonoBehaviour {
         new_player.SetActive(true);
         //プレイヤー死亡時のコールバック関数を登録
         player_clone_.GetComponent<Player>().OnPlayerDie += this.OnPlayerDieCallBack;
-        //プレイヤー被ダメージ時のコールバック関数を登録
+        //プレイヤーライフが変更された時のコールバック関数を登録
         player_clone_.GetComponent<Player>().OnPlayerLifeChaged += OnplayerLifeChangedCallBack;
+        //プレイヤー被ダメージ時のコールバック関数を登録
+        player_clone_.GetComponent<Player>().OnPlayerDamaged = OnPlayerDamagedCallBack;
         //カメラを設定
         meteor_camera_obj_.GetComponent<MeteorCamera>().PlayerClone = new_player;
     }
 
     private void CountTime()
     {
-        float temp_play_time = Time.time;
-        play_time = (int)temp_play_time;
+        float play_time_ = Time.time;
+        play_time = (int)play_time_;
     }
 
     public int Play_time

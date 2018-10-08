@@ -59,6 +59,9 @@ public class UIController : MonoBehaviour {
 
     private void Update()
     {
+        //画面の色をリセット
+        DamageEffectReset();
+
         //クリア時の処理
         if (stage_clear_flag)
         {
@@ -67,27 +70,11 @@ public class UIController : MonoBehaviour {
             return;
         }
 
-        //被ダメージのエフェクト
-        DamagedEffect();
-
         //タイムを計測しタイマーUIに反映
         if (time_count_flag)
         {
             CountTime();
-        }
-        
-        //ライフをUIに反映
-        //LifeText.GetComponent<Text>().text = "LIFE:" + player_life.ToString();
-
-        //プレイヤー死亡を検知（Player.csから受け取った値で検知）
-        if (player_die_flag)
-        {
-            //フラグ設定
-            time_count_flag = false;
-            MainPanel_.SetActive(true);
-            ContinueButton_.SetActive(true);
-            RetryButton_.SetActive(true);
-        }
+        }        
     }
 
     //スタートボタン押下時の処理
@@ -150,43 +137,43 @@ public class UIController : MonoBehaviour {
         }
         PlayTimeText.GetComponent<Text>().text = play_time_minute.ToString("00") + ":" + play_time_seconds.ToString("00");
     }
+
+    //プレイヤー死亡に伴いメニューUIを表示する
+    public void MenuUiOn()
+    {
+        //フラグ設定
+        time_count_flag = false;
+        MainPanel_.SetActive(true);
+        ContinueButton_.SetActive(true);
+        RetryButton_.SetActive(true);
+    }
+
     //タイムカウンタのUIをリセット
     private void ResetTime()
     {
         play_time_minute = 0;
         play_time_seconds = 0;
     }
+    
+    //プレイヤーライフをUIに反映
+    public void PlayerLifeUI(int player_life)
+    {
+        LifeText.GetComponent<Text>().text = "LIFE:" + player_life.ToString();
+    }
 
     //被ダメージのエフェクト
     public void DamagedEffect()
     {
-        if (damaged_flag)
-        {
-            //生存時：通常の被弾音　死亡時：爆発音
-            if (player_die_flag)
-            {
-                audio_source.PlayOneShot(explosion_sound);
-            }
-            else{
-                audio_source.PlayOneShot(inpact_sound);
-            }
+            //画面が赤く点滅
             damage_img.color = new Color(0.5f, 0f, 0f, 0.5f);
-            damaged_flag = false;
-        }
-        else
-        {
-            damage_img.color = Color.Lerp(damage_img.color, Color.clear, Time.deltaTime);
-        }
     }
 
-    ////セッター（プレイヤー死亡時にコンティニュー用に位置を受け取る）
-    //public Vector3 DyingPosition
-    //{
-    //    set
-    //    {
-    //        dying_position = value;
-    //    }
-    //}
+    //被ダメージ時の画面エフェクトリセット
+    public void DamageEffectReset()
+    {
+        //一秒でリセット
+        damage_img.color = Color.Lerp(damage_img.color, Color.clear, Time.deltaTime);
+    }
 
     //セッター（プレイヤー死亡時に死亡検知用にフラグを受け取る）
     public bool PlayerDieFlag
@@ -226,14 +213,18 @@ public class UIController : MonoBehaviour {
     //プレイヤーライフを表示するUI
     public GameObject LifeTextUI
     {
-        set
-        {
-            LifeText = value;
-        }
         get
         {
             return LifeText;
         }
     }
 
+    //プレイヤーライフを表示するUI
+    public GameObject DamageImageUI
+    {
+        get
+        {
+            return DamageImage;
+        }
+    }
 }
