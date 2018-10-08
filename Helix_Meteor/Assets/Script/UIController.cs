@@ -77,7 +77,7 @@ public class UIController : MonoBehaviour {
         }
         
         //ライフをUIに反映
-        LifeText.GetComponent<Text>().text = "LIFE:" + player_life.ToString();
+        //LifeText.GetComponent<Text>().text = "LIFE:" + player_life.ToString();
 
         //プレイヤー死亡を検知（Player.csから受け取った値で検知）
         if (player_die_flag)
@@ -188,14 +188,14 @@ public class UIController : MonoBehaviour {
     //    }
     //}
 
-    ////セッター（プレイヤー死亡時に死亡検知用にフラグを受け取る）
-    //public bool PlayerDieFlag
-    //{
-    //    set
-    //    {
-    //        player_die_flag = value;
-    //    }
-    //}
+    //セッター（プレイヤー死亡時に死亡検知用にフラグを受け取る）
+    public bool PlayerDieFlag
+    {
+        set
+        {
+            player_die_flag = value;
+        }
+    }
 
     //セッター（プレイヤーライフUI用）
     public int PlayerLife
@@ -220,6 +220,19 @@ public class UIController : MonoBehaviour {
         set
         {
             stage_clear_flag = true;
+        }
+    }
+
+    //プレイヤーライフを表示するUI
+    public GameObject LifeTextUI
+    {
+        set
+        {
+            LifeText = value;
+        }
+        get
+        {
+            return LifeText;
         }
     }
 

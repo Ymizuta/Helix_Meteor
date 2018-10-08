@@ -20,7 +20,7 @@ public class Player : MonoBehaviour {
     const float MIN_Y_POSITION = -3;
     const float MAX_Y_POSITION = 3;
     //プレイヤーのライフに関する変数
-    private int default_player_life = 1;                    //プレイヤーのライフ初期値
+    private int default_player_life = 2;                    //プレイヤーのライフ初期値
     private int player_life;                                 //プレイヤーのライフ
     //プレイヤーの速度に関する変数
     private float default_fall_speed = 0.5f;                //前方に移動する初期速度
@@ -61,6 +61,7 @@ public class Player : MonoBehaviour {
 
     //コールバック関数
     public System.Action<Vector3> OnPlayerDie;
+    public System.Action<int> OnPlayerLifeChaged;
 
 
     private void Start()
@@ -72,7 +73,10 @@ public class Player : MonoBehaviour {
         //ライフ初期化
         player_life = default_player_life;
         //UIにライフの値を渡す
-        GameManager_.GetComponent<UIController>().PlayerLife = player_life;
+        if (OnPlayerLifeChaged != null)
+        {
+            OnPlayerLifeChaged(player_life);
+        }
         //直進スピードの初期化
         fall_speed = default_fall_speed;
         //無敵モード・ポイントの初期化
@@ -210,7 +214,12 @@ public class Player : MonoBehaviour {
             //ライフ減少
             player_life -= 1;
             //UIにライフの値を渡す
-            GameManager_.GetComponent<UIController>().PlayerLife = player_life;
+//            GameManager_.GetComponent<UIController>().PlayerLife = player_life;
+            if(OnPlayerLifeChaged != null)
+            {
+                OnPlayerLifeChaged(player_life);
+            }
+
             //ノーダメージ処理
             NoDamageModeOn();
             //画面エフェクトフラグ
