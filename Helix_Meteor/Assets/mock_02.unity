@@ -792,6 +792,12 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &126434534 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114496465763870270, guid: 49e61dded6334de4b89f62944991285d,
+    type: 2}
+  m_PrefabInternal: {fileID: 1494491466}
+  m_Script: {fileID: 11500000, guid: 81810e02c25b29c48a4f83b169ffe363, type: 3}
 --- !u!1 &133911193
 GameObject:
   m_ObjectHideFlags: 0
@@ -6228,6 +6234,11 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 881426344}
   m_Mesh: {fileID: 4300000, guid: e6958b1959e6e924ca8f5151bf649c01, type: 3}
+--- !u!1 &882395718 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1240258631882992, guid: 788aec32ee6c23b4da5a6e0b5a8ddc93,
+    type: 2}
+  m_PrefabInternal: {fileID: 570693294}
 --- !u!1001 &886772083
 Prefab:
   m_ObjectHideFlags: 0
@@ -9984,7 +9995,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1469009634
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10332,6 +10343,28 @@ Prefab:
       propertyPath: ClearMassage
       value: 
       objectReference: {fileID: 1562102075}
+    - target: {fileID: 114232125780730284, guid: 49e61dded6334de4b89f62944991285d,
+        type: 2}
+      propertyPath: ui_controller_
+      value: 
+      objectReference: {fileID: 126434534}
+    - target: {fileID: 114232125780730284, guid: 49e61dded6334de4b89f62944991285d,
+        type: 2}
+      propertyPath: player_obj_
+      value: 
+      objectReference: {fileID: 1676777033290544, guid: 103c224ec3c4c344d8ca1e34e8634871,
+        type: 2}
+    - target: {fileID: 114232125780730284, guid: 49e61dded6334de4b89f62944991285d,
+        type: 2}
+      propertyPath: meteor_camera_obj_
+      value: 
+      objectReference: {fileID: 882395718}
+    - target: {fileID: 114232125780730284, guid: 49e61dded6334de4b89f62944991285d,
+        type: 2}
+      propertyPath: player_prefab_
+      value: 
+      objectReference: {fileID: 1676777033290544, guid: 103c224ec3c4c344d8ca1e34e8634871,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49e61dded6334de4b89f62944991285d, type: 2}
   m_IsPrefabAsset: 0

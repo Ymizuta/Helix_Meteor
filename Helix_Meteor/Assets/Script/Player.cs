@@ -20,7 +20,7 @@ public class Player : MonoBehaviour {
     const float MIN_Y_POSITION = -3;
     const float MAX_Y_POSITION = 3;
     //プレイヤーのライフに関する変数
-    private int default_player_life = 3;                    //プレイヤーのライフ初期値
+    private int default_player_life = 1;                    //プレイヤーのライフ初期値
     private int player_life;                                 //プレイヤーのライフ
     //プレイヤーの速度に関する変数
     private float default_fall_speed = 0.5f;                //前方に移動する初期速度
@@ -36,7 +36,7 @@ public class Player : MonoBehaviour {
     private float add_invincible_point = 1.0f;              //加算される無敵モードポイント
     private float reduced_invincible_point = 1.0f;          //減じられる無敵モードポイント
     const float MIN_INVINCIBLE_POINT = 0f;                  //無敵モードポイントの下限値
-    const float MAX_INVINCIBLE_POINT = 60.0f;                //無敵モードポイントの上限値
+    const float MAX_INVINCIBLE_POINT = 10.0f;                //無敵モードポイントの上限値
     //無敵時間に関する変数
     private float default_invincible_time = 0f;             //無敵モード中の経過時間の初期値
     private float invincible_time;                          //無敵モード中の経過時間（累積）
@@ -58,6 +58,10 @@ public class Player : MonoBehaviour {
 
     //被ダメージ時の画面エフェクト用フラグ
     private bool damaged_flag;
+
+    //コールバック関数
+    public System.Action<Vector3> OnPlayerDie;
+
 
     private void Start()
     {
@@ -323,22 +327,27 @@ public class Player : MonoBehaviour {
     //プレイヤーDestroy時にメンバ変数にnull格納
     private void OnDestroy()
     {
-        Debug.Log("死亡！");
         Controller_ = null;
         PlayerObj = null;
     }
     //プレイヤー死亡時の処理
     private void PlayerDie()
     {
+        Debug.Log("死亡！");
         //エフェクト・効果音
         GameObject new_explosion_effect = Instantiate(explosion_effect, gameObject.transform.position, gameObject.transform.rotation) as GameObject;
         GameObject.Destroy(new_explosion_effect, 3f);
 
-        //UIを表示
-        GameManager_.GetComponent<UIController>().PlayerDieFlag = true;
+        //コールバック
+        if (OnPlayerDie != null) {
+            Debug.Log("コールバック！！！");
+            OnPlayerDie(transform.position);
+        }
 
+        //UIを表示
+        //GameManager_.GetComponent<UIController>().PlayerDieFlag = true;
         //死に際に現在地を渡す（コンティニューでの復活用）
-        GameManager_.GetComponent<UIController>().DyingPosition = transform.position;
+        //GameManager_.GetComponent<UIController>().DyingPosition = transform.position;
         
         //プレイヤー消滅
         GameObject.Destroy(gameObject);

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
+
 
 public class UIController : MonoBehaviour {
 
@@ -36,6 +38,11 @@ public class UIController : MonoBehaviour {
     private int player_life;                                //プレイヤーのライフ
     private bool damaged_flag;                              //被ダメージ時のフラグ
     private bool stage_clear_flag;                          //ステージクリアのフラグ
+
+    //コールバック関数
+    public System.Action OnStartButton;
+    public System.Action OnContinueButton;
+    public System.Action OnRetryButton;
 
     private void Start()
     {
@@ -86,62 +93,50 @@ public class UIController : MonoBehaviour {
     //スタートボタン押下時の処理
     private void PushStartButton()
     {
-        //if(Player_ == null)
-        //{
-        //    return;
-        //}
-        Vector3 start_position = new Vector3(0, 0, 0);
-        GameObject new_player = Instantiate(prefav_player, start_position, gameObject.transform.rotation) as GameObject;
-        meteor_camera.GetComponent<MeteorCamera>().PlayerObjPro = new_player;
-        Controller_.PlayerObjProp = new_player;
-
         //タイム計測
         time_count_flag = true;
-
-        new_player.SetActive(true);
+        //UI非表示
         MainPanel_.SetActive(false);
         StartButton_.SetActive(false);
+        //コールバック（player生成等の処理を実行）
+        if(OnStartButton != null)
+        {
+            OnStartButton();
+        }
     }
     //コンティニューボタン押下時の処理
     private void PushContinueButton()
     {
-        Debug.Log(dying_position);
-        Vector3 continue_position = dying_position;
-        GameObject new_player = Instantiate(prefav_player, continue_position, gameObject.transform.rotation) as GameObject;
-        meteor_camera.GetComponent<MeteorCamera>().PlayerObjPro = new_player;
-        Controller_.PlayerObjProp = new_player;
-
         //タイム計測
         time_count_flag = true;
-
+        //UI表示
         MainPanel_.SetActive(false);
         RetryButton_.SetActive(false);
         ContinueButton_.SetActive(false);
         player_die_flag = false;
+        //コールバック（player生成等の処理を実行）
+        if (OnContinueButton != null)
+        {
+            OnContinueButton();
+        }
 
-        //ノーダメージ期間の実装
-        new_player.GetComponent<Player>().NoDamageModeOn();
-
-        new_player.SetActive(true);
     }
     //リトライボタン押下時の処理
     private void PushRetryButton()
     {
-        Vector3 retry_position = new Vector3(0,0,0);
-        GameObject new_player = Instantiate(prefav_player,retry_position,gameObject.transform.rotation) as GameObject;
-        meteor_camera.GetComponent<MeteorCamera>().PlayerObjPro = new_player;
-        Controller_.PlayerObjProp = new_player;
-
         //タイム計測
         time_count_flag = true;
         ResetTime();
-
+        //UI表示
         MainPanel_.SetActive(false);
         RetryButton_.SetActive(false);
         ContinueButton_.SetActive(false);
         player_die_flag = false;
-
-        new_player.SetActive(true);
+        //コールバック（player生成等の処理を実行）
+        if (OnRetryButton != null)
+        {
+            OnRetryButton();
+        }
     }
 
     //時間を計測する関数
@@ -184,23 +179,23 @@ public class UIController : MonoBehaviour {
         }
     }
 
-    //セッター（プレイヤー死亡時にコンティニュー用に位置を受け取る）
-    public Vector3 DyingPosition
-    {
-        set
-        {
-            dying_position = value;
-        }
-    }
+    ////セッター（プレイヤー死亡時にコンティニュー用に位置を受け取る）
+    //public Vector3 DyingPosition
+    //{
+    //    set
+    //    {
+    //        dying_position = value;
+    //    }
+    //}
 
-    //セッター（プレイヤー死亡時に死亡検知用にフラグを受け取る）
-    public bool PlayerDieFlag
-    {
-        set
-        {
-            player_die_flag = value;
-        }
-    }
+    ////セッター（プレイヤー死亡時に死亡検知用にフラグを受け取る）
+    //public bool PlayerDieFlag
+    //{
+    //    set
+    //    {
+    //        player_die_flag = value;
+    //    }
+    //}
 
     //セッター（プレイヤーライフUI用）
     public int PlayerLife

@@ -7,7 +7,10 @@ public class Controller : MonoBehaviour {
 
     [SerializeField] Player player_ = null; // エディターからアタッチ
     [SerializeField] MeteorCamera meteor_camera_ = null; // エディターからアタッチ
-    [SerializeField] GameObject PlayerObj = null;
+    [SerializeField] GameObject player_prefab_ = null;
+    [SerializeField] GameObject player_clone_ = null;
+    [SerializeField] GameObject meteor_camera_obj_ = null; 
+    [SerializeField] UIController ui_controller_ = null;
 
     private Vector3 touch_poz;
     private Vector3 old_player_poz;                 //前フレームでのタッチ位置（スワイプによる上下左右移動処理用）
@@ -16,22 +19,25 @@ public class Controller : MonoBehaviour {
     private float move_speed = 10.0f;               //上下左右移動のスピード調整用の値（Player_.Move関数の引数）
     private int default_play_time =1;
     private int play_time;
-//    float lifetime = 0.1f;
+    //    float lifetime = 0.1f;
 
+    private Vector3 continue_position;
 
-    //円状移動のための列挙型
-    //public enum Direction
-    //{
-    //    Right,
-    //    Left
-    //}
+    private void Start()
+    {
+        //コールバックするメソッドを登録
+        ui_controller_.OnStartButton += this.OnStartButtonCallBack;
+        ui_controller_.OnContinueButton += this.OnContinueButtonCallBack;
+        ui_controller_.OnRetryButton += this.OnRetryButtonCallBack;
+    }
 
     // Update is called once per frame
     void Update () {
-        if (PlayerObj == null)
+        if (player_clone_ == null)
         {
             return;
         }
+
 
         //タッチ操作
         TouchInfo info = AppUtil.GetTouch();
@@ -58,7 +64,7 @@ public class Controller : MonoBehaviour {
             move_direction = new_player_poz - old_player_poz;
 
             //プレイヤー上下左右移動
-            PlayerObj.GetComponent<Player>().Move(move_direction, move_speed);
+            player_clone_.GetComponent<Player>().Move(move_direction, move_speed);
 
             //次フレームでの移動処理のためold_player_pozに現在のフレームのタッチ位置(new_player_poz)を格納
             old_player_poz = new_player_poz;
@@ -96,6 +102,49 @@ public class Controller : MonoBehaviour {
         //}
     }
 
+    //プレイヤー死亡時にコールバックされた際の処理
+    public void OnPlayerDieCallBack(Vector3 player_die_position)
+    {
+        ui_controller_.PlayerDieFlag = true;
+        continue_position = player_die_position;
+    }
+
+    //スタートボタンでコールバックされた際の処理
+    public void OnStartButtonCallBack()
+    {
+    Debug.Log("スタートボタンでコールバックされた！");
+    Vector3 start_position = new Vector3(0, 0, 0);
+    GameObject new_player = Instantiate(player_prefab_, start_position, gameObject.transform.rotation) as GameObject;
+    meteor_camera_obj_.GetComponent<MeteorCamera>().PlayerClone = new_player;
+    player_clone_ = new_player;
+    player_clone_.SetActive(true);
+    player_clone_.GetComponent<Player>().OnPlayerDie += this.OnPlayerDieCallBack;
+    }
+
+    //コンティニューボタンでコールバックされた際の処理
+    public void OnContinueButtonCallBack()
+    {
+        Debug.Log("コンティニューボタンでコールバックされた！");
+        GameObject new_player = Instantiate(player_prefab_, continue_position, gameObject.transform.rotation) as GameObject;
+        meteor_camera_obj_.GetComponent<MeteorCamera>().PlayerClone = new_player;
+        player_clone_ = new_player;
+        player_clone_.GetComponent<Player>().OnPlayerDie += this.OnPlayerDieCallBack;
+        //ノーダメージ期間の実装
+        player_clone_.GetComponent<Player>().NoDamageModeOn();
+        player_clone_.SetActive(true);
+    }
+
+    public void OnRetryButtonCallBack()
+    {
+        Debug.Log("リトライボタンでコールバックされた！");
+        Vector3 retry_position = new Vector3(0, 0, 0);
+        GameObject new_player = Instantiate(player_prefab_, retry_position, gameObject.transform.rotation) as GameObject;
+        meteor_camera_obj_.GetComponent<MeteorCamera>().PlayerClone = new_player;
+        player_clone_ = new_player;
+        new_player.SetActive(true);
+        player_clone_.GetComponent<Player>().OnPlayerDie += this.OnPlayerDieCallBack;
+    }
+
     private void CountTime()
     {
         float temp_play_time = Time.time;
@@ -115,7 +164,7 @@ public class Controller : MonoBehaviour {
     {
         set
         {
-            PlayerObj = value;
+            player_clone_ = value;
         }
     }
 }
