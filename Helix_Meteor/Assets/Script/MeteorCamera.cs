@@ -7,6 +7,7 @@ public class MeteorCamera : MonoBehaviour {
     [SerializeField] Player Player_ = null;         // エディターからアタッチする
     [SerializeField] GameObject player_clone_ = null;   //エディターからアタッチする(nullチェック用)
 
+    private Vector3 default_camera_position = new Vector3(0,1,-10);
     float camera_positionz;
     float distance_from_player = 30;
     private Vector3 camera_poz;
@@ -54,6 +55,13 @@ public class MeteorCamera : MonoBehaviour {
         //カメラ位置を指定
         gameObject.transform.position = camera_poz;
     }
+    //位置初期化
+    public void SetDefaultPosition()
+    {
+        Debug.Log("カメラデフォルト！");
+        gameObject.transform.position = default_camera_position;
+        Debug.Log(default_camera_position);
+    }
 
     public GameObject PlayerClone
     {
@@ -62,4 +70,5 @@ public class MeteorCamera : MonoBehaviour {
             player_clone_ = value;
         }
     }
+
 }

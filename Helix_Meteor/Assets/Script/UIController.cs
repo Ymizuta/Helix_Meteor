@@ -8,9 +8,9 @@ using UnityEngine.Events;
 
 public class UIController : MonoBehaviour {
 
-    [SerializeField] GameObject prefav_player = null;
     [SerializeField] GameObject Player_ = null;
     [SerializeField] Camera meteor_camera = null;
+    [SerializeField] Controller Controller_ = null;
 
     //表示UI（ライフ、タイム等）
     [SerializeField] GameObject LifeText = null;
@@ -21,28 +21,24 @@ public class UIController : MonoBehaviour {
     [SerializeField] GameObject StartButton_ = null;
     [SerializeField] GameObject ContinueButton_ = null;
     [SerializeField] GameObject RetryButton_ = null;
-    [SerializeField] Controller Controller_ = null;
+    [SerializeField] GameObject NextStageButton_ = null;
     //エフェクト関連
     [SerializeField] GameObject DamageImage = null;
     private Image damage_img;
-    private AudioSource audio_source;
-    [SerializeField] AudioClip inpact_sound = null;         //被ダメージ時の効果音
-    [SerializeField] AudioClip explosion_sound = null;      //死亡時の効果音
     //タイム計測
     private bool time_count_flag = false;
     private float play_time_minute;
     private float play_time_seconds;
     //プレイヤークラスから値を受け取る変数
     private Vector3 dying_position;                         //プレイヤー消滅位置
-    private bool player_die_flag;                           //プレイヤー死亡フラグ
-    private int player_life;                                //プレイヤーのライフ
-    private bool damaged_flag;                              //被ダメージ時のフラグ
+//    private int player_life;                                //プレイヤーのライフ
     private bool stage_clear_flag;                          //ステージクリアのフラグ
 
     //コールバック関数
     public System.Action OnStartButton;
     public System.Action OnContinueButton;
     public System.Action OnRetryButton;
+    public System.Action OnNextStageButton;
 
     private void Start()
     {
@@ -50,11 +46,10 @@ public class UIController : MonoBehaviour {
         StartButton_.GetComponent<Button>().onClick.AddListener(PushStartButton);
         ContinueButton_.GetComponent<Button>().onClick.AddListener(PushContinueButton);
         RetryButton_.GetComponent<Button>().onClick.AddListener(PushRetryButton);
+        NextStageButton_.GetComponent<Button>().onClick.AddListener(PushNextStageButton);
         //ダメージエフェクト用のImage設定
         damage_img = DamageImage.GetComponent<Image>();
         damage_img.color = Color.clear;
-        //オーディオソース設定
-        audio_source = gameObject.GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -65,9 +60,13 @@ public class UIController : MonoBehaviour {
         //クリア時の処理
         if (stage_clear_flag)
         {
+            //「Clear」の文字を表示させ点滅させる
             ClearMassage.SetActive(true);
             ClearMassage.GetComponent<Text>().color = new Color(255f,255f,255f,Mathf.PingPong(Time.time,1));
             return;
+        }else if (stage_clear_flag == false)
+        {
+            ClearMassage.SetActive(false);
         }
 
         //タイムを計測しタイマーUIに反映
@@ -100,13 +99,11 @@ public class UIController : MonoBehaviour {
         MainPanel_.SetActive(false);
         RetryButton_.SetActive(false);
         ContinueButton_.SetActive(false);
-        player_die_flag = false;
         //コールバック（player生成等の処理を実行）
         if (OnContinueButton != null)
         {
             OnContinueButton();
         }
-
     }
     //リトライボタン押下時の処理
     private void PushRetryButton()
@@ -118,11 +115,30 @@ public class UIController : MonoBehaviour {
         MainPanel_.SetActive(false);
         RetryButton_.SetActive(false);
         ContinueButton_.SetActive(false);
-        player_die_flag = false;
+        NextStageButton_.SetActive(false);
+        //ステージクリア→リトライ時に「Clear」の文字を表示させないため
+        stage_clear_flag = false;
         //コールバック（player生成等の処理を実行）
         if (OnRetryButton != null)
         {
             OnRetryButton();
+        }
+    }
+    //ネクストステージボタン押下時の処理
+    private void PushNextStageButton()
+    {
+        ResetTime();
+        //UI表示
+        MainPanel_.SetActive(false);
+        RetryButton_.SetActive(false);
+        ContinueButton_.SetActive(false);
+        NextStageButton_.SetActive(false);
+        //ステージクリア→リトライ時に「Clear」の文字を表示させないため
+        stage_clear_flag = false;
+        //コールバック
+        if (OnNextStageButton != null)
+        {
+            OnNextStageButton();
         }
     }
 
@@ -138,14 +154,15 @@ public class UIController : MonoBehaviour {
         PlayTimeText.GetComponent<Text>().text = play_time_minute.ToString("00") + ":" + play_time_seconds.ToString("00");
     }
 
-    //プレイヤー死亡に伴いメニューUIを表示する
-    public void MenuUiOn()
+    //メニューUIを表示する
+    public void MenuUiOn(bool start_button,bool continue_button,bool retry_button,bool next_button)
     {
-        //フラグ設定
         time_count_flag = false;
         MainPanel_.SetActive(true);
-        ContinueButton_.SetActive(true);
-        RetryButton_.SetActive(true);
+        if (start_button) {StartButton_.SetActive(true);}
+        if (continue_button){ContinueButton_.SetActive(true);}
+        if (retry_button){RetryButton_.SetActive(true);}
+        if (next_button) {NextStageButton_.SetActive(true);}
     }
 
     //タイムカウンタのUIをリセット
@@ -175,31 +192,13 @@ public class UIController : MonoBehaviour {
         damage_img.color = Color.Lerp(damage_img.color, Color.clear, Time.deltaTime);
     }
 
-    //セッター（プレイヤー死亡時に死亡検知用にフラグを受け取る）
-    public bool PlayerDieFlag
-    {
-        set
-        {
-            player_die_flag = value;
-        }
-    }
-
-    //セッター（プレイヤーライフUI用）
-    public int PlayerLife
-    {
-        set{
-            player_life = value; 
-        }
-    }
-
-    //セッター（ダメージエフェクト用）
-    public bool DamagedFlag
-    {
-        set
-        {
-            damaged_flag = value;
-        }
-    }
+    ////セッター（プレイヤーライフUI用）
+    //public int PlayerLife
+    //{
+    //    set{
+    //        player_life = value; 
+    //    }
+    //}
 
     //セッター（ステージクリア）
     public bool StageClearFlag

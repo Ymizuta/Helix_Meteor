@@ -158,7 +158,6 @@ GameObject:
   - component: {fileID: 135165963626439698}
   - component: {fileID: 54942908205296720}
   - component: {fileID: 114180948245965084}
-  - component: {fileID: 114087107022101406}
   - component: {fileID: 114240642541624258}
   m_Layer: 0
   m_Name: Player
@@ -500,23 +499,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &114087107022101406
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1676777033290544}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af4748aede7e09a4cb52ca3544010db5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed_text: {fileID: 114148931017845568, guid: 764abb72cfa7d1349a7c1d6ce1810295,
-    type: 2}
-  invincible_point_text: {fileID: 114851052261222288, guid: d81d869af7c484848b1ab674648979a1,
-    type: 2}
-  player_life_text: {fileID: 114106691411539706, guid: afa7bb4c3231f4d42be46774bd2864ba,
-    type: 2}
 --- !u!114 &114180948245965084
 MonoBehaviour:
   m_ObjectHideFlags: 1

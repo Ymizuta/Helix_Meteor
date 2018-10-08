@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +15,9 @@ public class Controller : MonoBehaviour {
     [SerializeField] UIController ui_controller_ = null;
     [SerializeField] AudioClip inpact_sound = null;         //被ダメージ時の効果音
     [SerializeField] AudioClip explosion_sound = null;      //死亡時の効果音
+    //ステージ
+    [SerializeField] GameObject stage01_ = null;
+    [SerializeField] GameObject stage02_ = null;
 
     private Vector3 touch_poz;
     private Vector3 old_player_poz;                 //前フレームでのタッチ位置（スワイプによる上下左右移動処理用）
@@ -36,6 +38,7 @@ public class Controller : MonoBehaviour {
         ui_controller_.OnStartButton += this.OnStartButtonCallBack;
         ui_controller_.OnContinueButton += this.OnContinueButtonCallBack;
         ui_controller_.OnRetryButton += this.OnRetryButtonCallBack;
+        ui_controller_.OnNextStageButton += this.OnNextStageButtonCallBack;
     }
 
     // Update is called once per frame
@@ -77,8 +80,10 @@ public class Controller : MonoBehaviour {
         else
         if (info == TouchInfo.Ended)
         {
+            //処理なし
         }
 
+        //プレイタイムを累積
         CountTime();
 
         //画面振動させる処理
@@ -88,22 +93,6 @@ public class Controller : MonoBehaviour {
         //        meteor_camera_.Shake_Camera();
         //        lifetime -= Time.deltaTime;
         //    }
-        //}
-
-        //左右入力取得（キーボード操作・円状移動）
-        //Direction direction;
-        ////右入力
-        //if (Input.GetAxis("Horizontal") > 0)
-        //{
-        //    direction = Direction.Right;
-        //    player_.Move(direction);
-        //}
-        //else
-        ////左入力
-        //if (Input.GetAxis("Horizontal") < 0)
-        //{
-        //    direction = Direction.Left;
-        //    player_.Move(direction);
         //}
     }
     
@@ -120,7 +109,13 @@ public class Controller : MonoBehaviour {
         Debug.Log("プレイヤー死亡によりコールバック！");
         audio_source.PlayOneShot(explosion_sound);
         continue_position = player_die_position;
-        ui_controller_.MenuUiOn();
+
+        //コンティニューとリトライのボタンだけ表示させる
+        bool start_button_ = false;
+        bool continue_button_ = true;
+        bool retry_button_ = true;
+        bool next_stage_button = false;
+        ui_controller_.MenuUiOn(start_button_, continue_button_, retry_button_, next_stage_button);
     }
 
     //プレイヤーライフが変更時コールバックされた際の処理
@@ -128,6 +123,19 @@ public class Controller : MonoBehaviour {
     {
         //プレイヤークローンのライフをUIに反映
         ui_controller_.PlayerLifeUI(player_life);
+    }
+
+    //ゴール時にコールバックされた際の処理
+    public void OnGoalCallBack()
+    {
+        //クリアフラグ設定
+        ui_controller_.StageClearFlag = true;
+        //リトライとネクストのボタンだけ表示させる
+        bool start_button_ = false;
+        bool continue_button_ = false;
+        bool retry_button_ = true;
+        bool next_stage_button = true;
+        ui_controller_.MenuUiOn(start_button_,continue_button_,retry_button_,next_stage_button);
     }
 
     //スタートボタンでコールバックされた際の処理
@@ -146,6 +154,8 @@ public class Controller : MonoBehaviour {
     player_clone_.GetComponent<Player>().OnPlayerLifeChaged += OnplayerLifeChangedCallBack;
     //プレイヤー被ダメージ時のコールバック関数を登録
     player_clone_.GetComponent<Player>().OnPlayerDamaged = OnPlayerDamagedCallBack;
+    //ゴール時のコールバック関数を登録
+    player_clone_.GetComponent<Player>().OnGoal = OnGoalCallBack;
     //カメラを設定
     meteor_camera_obj_.GetComponent<MeteorCamera>().PlayerClone = new_player;
     }
@@ -163,6 +173,8 @@ public class Controller : MonoBehaviour {
         player_clone_.GetComponent<Player>().OnPlayerLifeChaged += OnplayerLifeChangedCallBack;
         //プレイヤー被ダメージ時のコールバック関数を登録
         player_clone_.GetComponent<Player>().OnPlayerDamaged = OnPlayerDamagedCallBack;
+        //ゴール時のコールバック関数を登録
+        player_clone_.GetComponent<Player>().OnGoal = OnGoalCallBack;
         //ノーダメージ期間の実装
         player_clone_.GetComponent<Player>().NoDamageModeOn();
         player_clone_.SetActive(true);
@@ -184,8 +196,33 @@ public class Controller : MonoBehaviour {
         player_clone_.GetComponent<Player>().OnPlayerLifeChaged += OnplayerLifeChangedCallBack;
         //プレイヤー被ダメージ時のコールバック関数を登録
         player_clone_.GetComponent<Player>().OnPlayerDamaged = OnPlayerDamagedCallBack;
+        //ゴール時のコールバック関数を登録
+        player_clone_.GetComponent<Player>().OnGoal = OnGoalCallBack;
         //カメラを設定
         meteor_camera_obj_.GetComponent<MeteorCamera>().PlayerClone = new_player;
+    }
+
+    //ネクストステージボタンでコールバックされた際の処理
+    public void OnNextStageButtonCallBack()
+    {
+        Debug.Log("ネクストボタンでコールバックされた！");
+
+        //スタートボタンだけ表示させる
+        bool start_button_ = true;
+        bool continue_button_ = false;
+        bool retry_button_ = false;
+        bool next_stage_button = false;
+        ui_controller_.MenuUiOn(start_button_, continue_button_, retry_button_, next_stage_button);
+        //ステージ２と表示する
+
+        //プレイヤー位置を初期化
+        GameObject.Destroy(player_clone_);
+        //カメラ位置を初期化
+        meteor_camera_.PlayerClone = null;
+        meteor_camera_obj_.GetComponent<MeteorCamera>().SetDefaultPosition();
+        //ステージ変更
+        stage01_.SetActive(false);
+        stage02_.SetActive(true);
     }
 
     private void CountTime()

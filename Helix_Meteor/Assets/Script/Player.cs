@@ -63,7 +63,7 @@ public class Player : MonoBehaviour {
     public System.Action<Vector3> OnPlayerDie;
     public System.Action<int> OnPlayerLifeChaged;
     public System.Action OnPlayerDamaged;
-
+    public System.Action OnGoal;
 
     private void Start()
     {
@@ -101,7 +101,7 @@ public class Player : MonoBehaviour {
         if (no_damage_flag)
         {
             no_damage_time += add_no_damage_time * Time.deltaTime;
-            if (NoDamageTimeOver())
+            if (CheckNoDamage(no_damage_time))
             {
                 NoDamageModeOff();
             }
@@ -113,7 +113,7 @@ public class Player : MonoBehaviour {
             //無敵時間を計測
             invincible_time += add_invincible_time * Time.deltaTime;
             //一定時間経過で無敵モード解除
-            if (InvincibleTimeIsOver())
+            if (CheckInvincibleTime())
             {
                 InvincibleModeOff();
             }
@@ -126,14 +126,33 @@ public class Player : MonoBehaviour {
         }
     }
 
-    //プレイヤーを直進させる関数
-    private void Fall()
+    //ゲッター
+    public int Player_life
     {
-        player_poz = gameObject.transform.position;
-        player_poz.z += fall_speed;
-        player_poz.x = gameObject.transform.position.x;
-        player_poz.y = gameObject.transform.position.y;
-        gameObject.transform.position = player_poz;
+        get
+        {
+            return player_life;
+        }
+    }
+    //ゲッター
+    public float Fall_speed
+    {
+        get
+        {
+            return fall_speed;
+        }
+    }
+    //ゲッター
+    public float Invincible_point
+    {
+        get
+        {
+            return invincible_point;
+        }
+        set
+        {
+            invincible_point = value;
+        }
     }
 
     //プレイヤーの上下左右斜め移動関数(スワイプ/マウスドラッグによる操作)
@@ -151,32 +170,50 @@ public class Player : MonoBehaviour {
         gameObject.transform.position = player_poz_;
     }
 
+    //被ダメージ直後のノーダメージタイム移行（即死防止）
+    public void NoDamageModeOn()
+    {
+        gameObject.GetComponent<SphereCollider>().enabled = false;
+        no_damage_flag = true;
+        Debug.Log("ノーダメージ中！");
+    }
+
+    //プレイヤーを直進させる関数
+    private void Fall()
+    {
+        player_poz = gameObject.transform.position;
+        player_poz.z += fall_speed;
+        player_poz.x = gameObject.transform.position.x;
+        player_poz.y = gameObject.transform.position.y;
+        gameObject.transform.position = player_poz;
+    }
+
     //時間経過でプレイヤーを加速する関数
     private float SpeedUp()
     {
         //返り値用ローカル変数を宣言
-        float temp_fall_speed = fall_speed;
-        temp_fall_speed += add_speed * Time.deltaTime;
+        float fall_speed_ = fall_speed;
+        fall_speed_ += add_speed * Time.deltaTime;
         //プレイヤーの速度は上限・下限の範囲で変動
-        return Mathf.Clamp(temp_fall_speed, MIN_SPEED, MAX_SPEED);
+        return Mathf.Clamp(fall_speed_, MIN_SPEED, MAX_SPEED);
     }
 
     //障害物衝突時にプレイヤーを減速する関数
     private float SpeedDown()
     {
         //返り値用ローカル変数を宣言
-        float temp_fall_speed = fall_speed;
-        temp_fall_speed -= reduce_speed;
+        float fall_speed_ = fall_speed;
+        fall_speed_ -= reduce_speed;
         //プレイヤーの速度は上限・下限の範囲で変動
-        return Mathf.Clamp(temp_fall_speed,MIN_SPEED,MAX_SPEED);
+        return Mathf.Clamp(fall_speed_,MIN_SPEED,MAX_SPEED);
     }
 
     //時間経過で無敵モードポイントを累積
     private float AddInvinciblePoint()
     {
-        float temp_invincible_point = invincible_point;
-        temp_invincible_point += add_invincible_point * Time.deltaTime;
-        return Mathf.Clamp(temp_invincible_point, MIN_INVINCIBLE_POINT, MAX_INVINCIBLE_POINT);
+        float invincible_point_ = invincible_point;
+        invincible_point_ += add_invincible_point * Time.deltaTime;
+        return Mathf.Clamp(invincible_point_, MIN_INVINCIBLE_POINT, MAX_INVINCIBLE_POINT);
     }
 
     //オブジェクトに衝突した際の処理の関数
@@ -186,10 +223,14 @@ public class Player : MonoBehaviour {
         if (other.gameObject.tag == "Goal")
         {
             Debug.Log("ゴール！！");
-            Vector3 transport_poz = new Vector3(0,0,10000);
-            gameObject.transform.position = transport_poz;
-
-            GameManager_.GetComponent<UIController>().StageClearFlag = true;
+            Vector3 transport_poz = new Vector3(0,0,10000);         //仮置きの処理（後で削除）
+            gameObject.transform.position = transport_poz;          //仮置きの処理（後で削除）
+            //コールバック
+            if (OnGoal != null)
+            {
+                OnGoal();
+            }
+//            GameManager_.GetComponent<UIController>().StageClearFlag = true;
         }
 
         //無敵モード時は障害物の影響を受けない
@@ -256,37 +297,9 @@ public class Player : MonoBehaviour {
  //       pt_blue_fire.Stop();
     }
 
-    //ゲッター
-    public int Player_life
-    {
-        get
-        {
-            return player_life;
-        }
-    }
-    //ゲッター
-    public float Fall_speed
-    {
-        get
-        {
-            return fall_speed;
-        }
-    }
-    //ゲッター
-    public float Invincible_point
-    {
-        get
-        {
-            return invincible_point;
-        }
-        set
-        {
-            invincible_point = value;
-        }
-    }
 
     //無敵モードポイントが最大ならtrueを返す
-    private bool InvinciblePointIsMax()
+    private bool CheckInvinciblePoint()
     {
         if (invincible_point >= MAX_INVINCIBLE_POINT)
         {
@@ -298,7 +311,7 @@ public class Player : MonoBehaviour {
     }
 
     //無敵状態が一定時間経過するとtrueを返す
-    private bool InvincibleTimeIsOver()
+    private bool CheckInvincibleTime()
     {
         if (invincible_time >= MAX_INVINCIBLE_TIME)
         {
@@ -315,7 +328,7 @@ public class Player : MonoBehaviour {
         //時間経過で無敵モード・ポイントを累積
         invincible_point = AddInvinciblePoint();
         //無敵モードポイントが最大値の時、無敵モードフラグを立てる
-        if (InvinciblePointIsMax())
+        if (CheckInvinciblePoint())
         {
             Debug.Log("無敵モード！");
             //無敵モードフラグON
@@ -359,13 +372,6 @@ public class Player : MonoBehaviour {
         GameObject.Destroy(gameObject);
     }
 
-    //被ダメージ直後のノーダメージタイム移行（即死防止）
-    public void NoDamageModeOn()
-    {
-        gameObject.GetComponent<SphereCollider>().enabled = false;
-        no_damage_flag = true;
-        Debug.Log("ノーダメージ中！");
-    }
     //被ダメージ直後のノーダメージタイム解除（即死防止）
     private void NoDamageModeOff()
     {
@@ -375,15 +381,15 @@ public class Player : MonoBehaviour {
         Debug.Log("ノーダメージ解除！");
     }
     //被ダメージ直後のノーダメージタイムの解除判定の関数
-    bool NoDamageTimeOver()
+    bool CheckNoDamage(float no_damage_time_)
     {
-    if (no_damage_time >= MAX_NO_DAMAGE_TIME)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }           
+        if (no_damage_time_ >= MAX_NO_DAMAGE_TIME)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }           
     }
 }
