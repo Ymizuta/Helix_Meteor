@@ -105,20 +105,20 @@ public class Controller : MonoBehaviour {
         //}
     }
     //プレイヤー無敵モードで衝突時にコールバックされる処理
-    public void OnInvincibleCallBack()
+    private void OnInvincibleCallBack()
     {
         audio_source.PlayOneShot(explosion_sound);
     }
 
     //プレイヤーがダメージ受けコールバックされる処理
-    public void OnPlayerDamagedCallBack()
+    private void OnPlayerDamagedCallBack()
     {
         audio_source.PlayOneShot(inpact_sound);
         ui_controller_.DamagedEffect();
     }
 
     //プレイヤー死亡時にコールバックされる処理
-    public void OnPlayerDieCallBack(Vector3 player_die_position)
+    private void OnPlayerDieCallBack(Vector3 player_die_position)
     {
         Debug.Log("プレイヤー死亡によりコールバック！");
         audio_source.PlayOneShot(explosion_sound);
@@ -138,7 +138,7 @@ public class Controller : MonoBehaviour {
 
 
     //ゴール時にコールバックされる処理
-    public void OnGoalCallBack()
+    private void OnGoalCallBack()
     {
         //クリアフラグ設定
         ui_controller_.StageClearFlag = true;
@@ -162,14 +162,14 @@ public class Controller : MonoBehaviour {
     }
 
     //プレイヤーライフが変更時コールバックされる処理
-    public void OnplayerLifeChangedCallBack(int player_life)
+    private void OnplayerLifeChangedCallBack(int player_life)
     {
         //プレイヤークローンのライフをUIに反映
         ui_controller_.PlayerLifeUI(player_life);
     }
 
     //スタートボタンでコールバックされる処理
-    public void OnStartButtonCallBack()
+    private void OnStartButtonCallBack()
     {
         Debug.Log("スタートボタンでコールバックされた！");
         //プレイヤーを生成
@@ -180,7 +180,7 @@ public class Controller : MonoBehaviour {
     }
 
     //コンティニューボタンでコールバックされる処理
-    public void OnContinueButtonCallBack()
+    private void OnContinueButtonCallBack()
     {
         Debug.Log("コンティニューボタンでコールバックされた！");
         //プレイヤーを生成
@@ -193,7 +193,7 @@ public class Controller : MonoBehaviour {
     }
 
     //リトライボタンでコールバックされる処理
-    public void OnRetryButtonCallBack()
+    private void OnRetryButtonCallBack()
     {
         Debug.Log("リトライボタンでコールバックされた！");
         //プレイヤーを生成
@@ -204,7 +204,7 @@ public class Controller : MonoBehaviour {
     }
 
     //ネクストステージボタンでコールバックされる処理
-    public void OnNextStageButtonCallBack()
+    private void OnNextStageButtonCallBack()
     {
         Debug.Log("ネクストボタンでコールバックされた！");
 
@@ -237,6 +237,11 @@ public class Controller : MonoBehaviour {
         }
     }
 
+    private void OnIPointChangeCallBack(float invincivle_point_)
+    {
+        ui_controller_.InvinciblePointUI(invincivle_point_);
+    }
+
     //ボタン押下時にプレイヤーのクローンを生成
     private void ClonePlayer(Vector3 clone_position_)
     {
@@ -254,6 +259,8 @@ public class Controller : MonoBehaviour {
         player_.OnGoal = OnGoalCallBack;
         //無敵モードでの衝突時のコールバック関数を登録
         player_.OnInvincible = OnInvincibleCallBack;
+        //無敵モードポイント変化時のコールバック関数を登録
+        player_.OnInvinciblePointChange += OnIPointChangeCallBack;
     }
 
     private void CountTime()

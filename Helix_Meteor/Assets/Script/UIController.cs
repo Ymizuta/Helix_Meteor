@@ -19,6 +19,7 @@ public class UIController : MonoBehaviour {
     private string clear_message = "STAGE CLEAR";
     private string all_clear_message = "ALL STAGE CLEAR";
     [SerializeField] GameObject stage_name = null;
+    [SerializeField] GameObject invincible_point_gauge;
     //操作UI（スタート、リトライ等のボタン）
     [SerializeField] GameObject MainPanel_ = null;
     [SerializeField] GameObject StartButton_ = null;
@@ -65,7 +66,7 @@ public class UIController : MonoBehaviour {
             //「Clear」の文字を表示させ点滅させる           
             ui_message.GetComponent<Text>().text = clear_message;
             ui_message.SetActive(true);
-            ui_message.GetComponent<Text>().color = new Color(255f,255f,255f,Mathf.PingPong(Time.time,1));
+            ui_message.GetComponent<Text>().color = new Color(255f,247f,0f,Mathf.PingPong(Time.time,1));
             return;
         }else if (stage_clear_flag == false)
         {
@@ -197,7 +198,13 @@ public class UIController : MonoBehaviour {
     //プレイヤーライフをUIに反映
     public void PlayerLifeUI(int player_life)
     {
-        LifeText.GetComponent<Text>().text = "LIFE:" + player_life.ToString();
+        LifeText.GetComponent<Text>().text = "LIFE × " + player_life.ToString();
+    }
+
+    //無敵モードポイントをUIに反映
+    public void InvinciblePointUI(float invincible_point_)
+    {
+        invincible_point_gauge.GetComponent<Slider>().value = invincible_point_;
     }
 
     //ステージ名を表示

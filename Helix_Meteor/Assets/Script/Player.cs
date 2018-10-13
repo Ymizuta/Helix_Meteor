@@ -67,6 +67,7 @@ public class Player : MonoBehaviour {
     public System.Action<int> OnPlayerLifeChaged;           //プレイヤーのライフ増減時に呼び出すコールバック関数（UIへのライフ反映等）
     public System.Action OnPlayerDamaged;                   //プレイヤーの被ダメージ時に呼び出すコールバック関数（ダメージ演出等のため）
     public System.Action OnGoal;                            //ゴール時に呼び出すコールバック関数
+    public System.Action<float> OnInvinciblePointChange;
     public System.Action OnInvincible;                      //
 
     private void Start()
@@ -100,6 +101,12 @@ public class Player : MonoBehaviour {
 
         //時間経過でプレイヤーの直進スピードアップ
         fall_speed = SpeedUp();
+
+        //UIに無敵モードポイントを反映
+        if(OnInvinciblePointChange != null)
+        {
+            OnInvinciblePointChange(invincible_point);
+        }
 
         //被ダメージ直後のノーダメージタイム（数秒間・即死防止用）
         if (no_damage_flag)
@@ -147,7 +154,7 @@ public class Player : MonoBehaviour {
         }
     }
     //ゲッター
-    public float Invincible_point
+    public float InvinciblePoint
     {
         get
         {
