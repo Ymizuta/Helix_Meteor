@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class Controller : MonoBehaviour {
 
-    [SerializeField] Player player_ = null; // エディターからアタッチ
+    //[SerializeField] Player player_ = null; // エディターからアタッチ
     [SerializeField] MeteorCamera meteor_camera_ = null; // エディターからアタッチ
     [SerializeField] GameObject player_prefab_ = null;
     [SerializeField] GameObject player_clone_ = null;
@@ -24,7 +24,7 @@ public class Controller : MonoBehaviour {
     private Vector3 new_player_poz;                 //現在フレームでのタッチ位置（スワイプによる上下左右移動処理用）
     private Vector3 move_direction;                 //上下左右移動の移動方向（Player_.Move関数の引数）
     private float move_speed = 10.0f;               //上下左右移動のスピード調整用の値（Player_.Move関数の引数）
-    private int default_play_time =1;
+    //private int default_play_time =1;
     private int play_time;
     //    float lifetime = 0.1f;
 
@@ -95,15 +95,20 @@ public class Controller : MonoBehaviour {
         //    }
         //}
     }
-    
-    //プレイヤーがダメージ受けコールバックされた際の処理
+    //プレイヤー無敵モードで衝突時にコールバックされる処理
+    public void OnInvincibleCallBack()
+    {
+        audio_source.PlayOneShot(explosion_sound);
+    }
+
+    //プレイヤーがダメージ受けコールバックされる処理
     public void OnPlayerDamagedCallBack()
     {
         audio_source.PlayOneShot(inpact_sound);
         ui_controller_.DamagedEffect();
     }
 
-    //プレイヤー死亡時にコールバックされた際の処理
+    //プレイヤー死亡時にコールバックされる処理
     public void OnPlayerDieCallBack(Vector3 player_die_position)
     {
         Debug.Log("プレイヤー死亡によりコールバック！");
@@ -111,34 +116,41 @@ public class Controller : MonoBehaviour {
         continue_position = player_die_position;
 
         //コンティニューとリトライのボタンだけ表示させる
-        bool start_button_ = false;
-        bool continue_button_ = true;
-        bool retry_button_ = true;
-        bool next_stage_button = false;
-        ui_controller_.MenuUiOn(start_button_, continue_button_, retry_button_, next_stage_button);
+        //bool start_button_ = false;
+        //bool continue_button_ = true;
+        //bool retry_button_ = true;
+        //bool next_stage_button = false;
+        //ui_controller_.MenuUiOn(start_button_, continue_button_, retry_button_, next_stage_button);
+        ui_controller_.MainPanelActive();
+        ui_controller_.continueButtonActive();
+        ui_controller_.RetryButtonActive();
     }
 
-    //プレイヤーライフが変更時コールバックされた際の処理
+
+    //ゴール時にコールバックされる処理
+    public void OnGoalCallBack()
+    {
+        //クリアフラグ設定
+        ui_controller_.StageClearFlag = true;
+        ////リトライとネクストのボタンだけ表示させる
+        //bool start_button_ = false;
+        //bool continue_button_ = false;
+        //bool retry_button_ = true;
+        //bool next_stage_button = true;
+        //ui_controller_.MenuUiOn(start_button_,continue_button_,retry_button_,next_stage_button);
+        ui_controller_.MainPanelActive();
+        ui_controller_.RetryButtonActive();
+        ui_controller_.NextStageButtonActive();
+    }
+
+    //プレイヤーライフが変更時コールバックされる処理
     public void OnplayerLifeChangedCallBack(int player_life)
     {
         //プレイヤークローンのライフをUIに反映
         ui_controller_.PlayerLifeUI(player_life);
     }
 
-    //ゴール時にコールバックされた際の処理
-    public void OnGoalCallBack()
-    {
-        //クリアフラグ設定
-        ui_controller_.StageClearFlag = true;
-        //リトライとネクストのボタンだけ表示させる
-        bool start_button_ = false;
-        bool continue_button_ = false;
-        bool retry_button_ = true;
-        bool next_stage_button = true;
-        ui_controller_.MenuUiOn(start_button_,continue_button_,retry_button_,next_stage_button);
-    }
-
-    //スタートボタンでコールバックされた際の処理
+    //スタートボタンでコールバックされる処理
     public void OnStartButtonCallBack()
     {
     Debug.Log("スタートボタンでコールバックされた！");
@@ -156,11 +168,15 @@ public class Controller : MonoBehaviour {
     player_clone_.GetComponent<Player>().OnPlayerDamaged = OnPlayerDamagedCallBack;
     //ゴール時のコールバック関数を登録
     player_clone_.GetComponent<Player>().OnGoal = OnGoalCallBack;
+    //ゴール時のコールバック関数を登録
+    player_clone_.GetComponent<Player>().OnGoal = OnGoalCallBack;
+    //無敵モードでの衝突時のコールバック関数を登録
+    player_clone_.GetComponent<Player>().OnInvincible = OnInvincibleCallBack;    
     //カメラを設定
     meteor_camera_obj_.GetComponent<MeteorCamera>().PlayerClone = new_player;
     }
 
-    //コンティニューボタンでコールバックされた際の処理
+    //コンティニューボタンでコールバックされる処理
     public void OnContinueButtonCallBack()
     {
         Debug.Log("コンティニューボタンでコールバックされた！");
@@ -175,6 +191,8 @@ public class Controller : MonoBehaviour {
         player_clone_.GetComponent<Player>().OnPlayerDamaged = OnPlayerDamagedCallBack;
         //ゴール時のコールバック関数を登録
         player_clone_.GetComponent<Player>().OnGoal = OnGoalCallBack;
+        //無敵モードでの衝突時のコールバック関数を登録
+        player_clone_.GetComponent<Player>().OnInvincible = OnInvincibleCallBack;
         //ノーダメージ期間の実装
         player_clone_.GetComponent<Player>().NoDamageModeOn();
         player_clone_.SetActive(true);
@@ -182,6 +200,7 @@ public class Controller : MonoBehaviour {
         meteor_camera_obj_.GetComponent<MeteorCamera>().PlayerClone = new_player;
     }
 
+    //リトライボタンでコールバックされる処理
     public void OnRetryButtonCallBack()
     {
         Debug.Log("リトライボタンでコールバックされた！");
@@ -198,11 +217,13 @@ public class Controller : MonoBehaviour {
         player_clone_.GetComponent<Player>().OnPlayerDamaged = OnPlayerDamagedCallBack;
         //ゴール時のコールバック関数を登録
         player_clone_.GetComponent<Player>().OnGoal = OnGoalCallBack;
+        //無敵モードでの衝突時のコールバック関数を登録
+        player_clone_.GetComponent<Player>().OnInvincible = OnInvincibleCallBack;
         //カメラを設定
         meteor_camera_obj_.GetComponent<MeteorCamera>().PlayerClone = new_player;
     }
 
-    //ネクストステージボタンでコールバックされた際の処理
+    //ネクストステージボタンでコールバックされる処理
     public void OnNextStageButtonCallBack()
     {
         Debug.Log("ネクストボタンでコールバックされた！");

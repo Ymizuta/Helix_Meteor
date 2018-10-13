@@ -510,22 +510,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24030c68de4a7174db7aa39326529bad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Controller_: {fileID: 0}
   PlayerObj: {fileID: 1676777033290544}
-  GameManager_: {fileID: 1972286773717126, guid: 49e61dded6334de4b89f62944991285d,
-    type: 2}
   MainUIPanel_: {fileID: 1251866462541504, guid: a238576e47f50d14ea5b9984a7415147,
     type: 2}
   ContinueButton_: {fileID: 1773233131622924, guid: a238576e47f50d14ea5b9984a7415147,
     type: 2}
   RetryButton_: {fileID: 1508456697210292, guid: a238576e47f50d14ea5b9984a7415147,
     type: 2}
+  GameManager_: {fileID: 1972286773717126, guid: 49e61dded6334de4b89f62944991285d,
+    type: 2}
+  Controller_: {fileID: 0}
   player_poz: {x: 0, y: 0, z: 0}
   pt_red_fire: {fileID: 198040303310044342}
   Jet_Effect: {fileID: 1845126531176470}
-  Inpact_Effect: {fileID: 100004, guid: b46890100828db6429ff69c322b45893, type: 2}
-  explosion_effect: {fileID: 1000011797152326, guid: acf39d9f4addf294d93fa56fa373961b,
-    type: 2}
+  Inpact_Effect: {fileID: 100004, guid: 084c6a87873fd6e4da7978a01aa18b34, type: 2}
+  explosion_effect: {fileID: 100008, guid: 1ae4db7b36e51124b89d2b32303a7a0b, type: 2}
 --- !u!114 &114240642541624258
 MonoBehaviour:
   m_ObjectHideFlags: 1

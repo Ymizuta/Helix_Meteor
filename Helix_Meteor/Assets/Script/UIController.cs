@@ -8,9 +8,9 @@ using UnityEngine.Events;
 
 public class UIController : MonoBehaviour {
 
-    [SerializeField] GameObject Player_ = null;
-    [SerializeField] Camera meteor_camera = null;
-    [SerializeField] Controller Controller_ = null;
+    //[SerializeField] GameObject Player_ = null;
+    //[SerializeField] Camera meteor_camera = null;
+    //[SerializeField] Controller Controller_ = null;
 
     //表示UI（ライフ、タイム等）
     [SerializeField] GameObject LifeText = null;
@@ -74,6 +74,16 @@ public class UIController : MonoBehaviour {
         {
             CountTime();
         }        
+    }
+
+    public void TimeCountFlagOn()
+    {
+        time_count_flag = true;
+    }
+
+    public void TimeCountFlagOff()
+    {
+        time_count_flag = false;
     }
 
     //スタートボタン押下時の処理
@@ -163,6 +173,31 @@ public class UIController : MonoBehaviour {
         if (continue_button){ContinueButton_.SetActive(true);}
         if (retry_button){RetryButton_.SetActive(true);}
         if (next_button) {NextStageButton_.SetActive(true);}
+    }
+    //パネルUIを表示する
+    public void MainPanelActive()
+    {
+        MainPanel_.SetActive(true);
+    }
+    //スタートボタンUIを表示する
+    public void StartButtonActive()
+    {
+        StartButton_.SetActive(true);
+    }
+    //コンティニューボタンUIを表示する
+    public void continueButtonActive()
+    {
+        ContinueButton_.SetActive(true);
+    }
+    //リトライボタンUIを表示する
+    public void RetryButtonActive()
+    {
+        RetryButton_.SetActive(true);
+    }
+    //ネクストステージボタンUIを表示する
+    public void NextStageButtonActive()
+    {
+        NextStageButton_.SetActive(true);
     }
 
     //タイムカウンタのUIをリセット

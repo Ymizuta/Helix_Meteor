@@ -82,8 +82,6 @@
     <Compile Include="Assets\inported_assets\JMO Assets\WarFX\Scripts\WFX_BulletHoleDecal.cs" />
     <Compile Include="Assets\inported_assets\JMO Assets\WarFX\Scripts\WFX_LightFlicker.cs" />
     <Compile Include="Assets\inported_assets\JMO Assets\WarFX\Spawn System\CFX_SpawnSystem.cs" />
-    <Compile Include="Assets\inported_assets\PyroParticles\Demo\DemoScript.cs" />
-    <Compile Include="Assets\inported_assets\PyroParticles\Demo\DemoScriptEditor.cs" />
     <Compile Include="Assets\inported_assets\PyroParticles\Prefab\Script\FireBaseScript.cs" />
     <Compile Include="Assets\inported_assets\PyroParticles\Prefab\Script\FireCollisionForwardScript.cs" />
     <Compile Include="Assets\inported_assets\PyroParticles\Prefab\Script\FireConstantBaseScript.cs" />

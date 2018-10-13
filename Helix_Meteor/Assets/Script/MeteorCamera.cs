@@ -7,9 +7,9 @@ public class MeteorCamera : MonoBehaviour {
     [SerializeField] Player Player_ = null;         // エディターからアタッチする
     [SerializeField] GameObject player_clone_ = null;   //エディターからアタッチする(nullチェック用)
 
-    private Vector3 default_camera_position = new Vector3(0,1,-10);
+    private Vector3 default_camera_position = new Vector3(0,2,-10);
     float camera_positionz;
-    float distance_from_player = 30;
+    float distance_from_player = 15;
     private Vector3 camera_poz;
 
     //カメラ振動用（テスト用）
