@@ -15,7 +15,10 @@ public class UIController : MonoBehaviour {
     //表示UI（ライフ、タイム等）
     [SerializeField] GameObject LifeText = null;
     [SerializeField] GameObject PlayTimeText = null;
-    [SerializeField] GameObject ClearMassage= null;
+    [SerializeField] GameObject ui_message= null;
+    private string clear_message = "STAGE CLEAR";
+    private string all_clear_message = "ALL STAGE CLEAR";
+    [SerializeField] GameObject stage_name = null;
     //操作UI（スタート、リトライ等のボタン）
     [SerializeField] GameObject MainPanel_ = null;
     [SerializeField] GameObject StartButton_ = null;
@@ -31,7 +34,6 @@ public class UIController : MonoBehaviour {
     private float play_time_seconds;
     //プレイヤークラスから値を受け取る変数
     private Vector3 dying_position;                         //プレイヤー消滅位置
-//    private int player_life;                                //プレイヤーのライフ
     private bool stage_clear_flag;                          //ステージクリアのフラグ
 
     //コールバック関数
@@ -60,13 +62,14 @@ public class UIController : MonoBehaviour {
         //クリア時の処理
         if (stage_clear_flag)
         {
-            //「Clear」の文字を表示させ点滅させる
-            ClearMassage.SetActive(true);
-            ClearMassage.GetComponent<Text>().color = new Color(255f,255f,255f,Mathf.PingPong(Time.time,1));
+            //「Clear」の文字を表示させ点滅させる           
+            ui_message.GetComponent<Text>().text = clear_message;
+            ui_message.SetActive(true);
+            ui_message.GetComponent<Text>().color = new Color(255f,255f,255f,Mathf.PingPong(Time.time,1));
             return;
         }else if (stage_clear_flag == false)
         {
-            ClearMassage.SetActive(false);
+            ui_message.SetActive(false);
         }
 
         //タイムを計測しタイマーUIに反映
@@ -76,11 +79,11 @@ public class UIController : MonoBehaviour {
         }        
     }
 
+    //UIのタイムカウントを進める/止めるのフラグ設定
     public void TimeCountFlagOn()
     {
         time_count_flag = true;
     }
-
     public void TimeCountFlagOff()
     {
         time_count_flag = false;
@@ -94,8 +97,9 @@ public class UIController : MonoBehaviour {
         //UI非表示
         MainPanel_.SetActive(false);
         StartButton_.SetActive(false);
+        stage_name.SetActive(false);
         //コールバック（player生成等の処理を実行）
-        if(OnStartButton != null)
+        if (OnStartButton != null)
         {
             OnStartButton();
         }
@@ -109,6 +113,7 @@ public class UIController : MonoBehaviour {
         MainPanel_.SetActive(false);
         RetryButton_.SetActive(false);
         ContinueButton_.SetActive(false);
+        stage_name.SetActive(false);
         //コールバック（player生成等の処理を実行）
         if (OnContinueButton != null)
         {
@@ -126,6 +131,7 @@ public class UIController : MonoBehaviour {
         RetryButton_.SetActive(false);
         ContinueButton_.SetActive(false);
         NextStageButton_.SetActive(false);
+        stage_name.SetActive(false);
         //ステージクリア→リトライ時に「Clear」の文字を表示させないため
         stage_clear_flag = false;
         //コールバック（player生成等の処理を実行）
@@ -150,18 +156,6 @@ public class UIController : MonoBehaviour {
         {
             OnNextStageButton();
         }
-    }
-
-    //時間を計測する関数
-    private void CountTime()
-    {
-        play_time_seconds += Time.deltaTime;
-        if (play_time_minute > 60)
-        {
-            play_time_minute++;
-            play_time_seconds -= 60;
-        }
-        PlayTimeText.GetComponent<Text>().text = play_time_minute.ToString("00") + ":" + play_time_seconds.ToString("00");
     }
 
     //メニューUIを表示する
@@ -199,18 +193,18 @@ public class UIController : MonoBehaviour {
     {
         NextStageButton_.SetActive(true);
     }
-
-    //タイムカウンタのUIをリセット
-    private void ResetTime()
-    {
-        play_time_minute = 0;
-        play_time_seconds = 0;
-    }
     
     //プレイヤーライフをUIに反映
     public void PlayerLifeUI(int player_life)
     {
         LifeText.GetComponent<Text>().text = "LIFE:" + player_life.ToString();
+    }
+
+    //ステージ名を表示
+    public void StageNameActive(int stage_number)
+    {
+        stage_name.GetComponent<Text>().text = "STAGE "+ stage_number.ToString("00");
+        stage_name.SetActive(true);
     }
 
     //被ダメージのエフェクト
@@ -227,15 +221,7 @@ public class UIController : MonoBehaviour {
         damage_img.color = Color.Lerp(damage_img.color, Color.clear, Time.deltaTime);
     }
 
-    ////セッター（プレイヤーライフUI用）
-    //public int PlayerLife
-    //{
-    //    set{
-    //        player_life = value; 
-    //    }
-    //}
-
-    //セッター（ステージクリア）
+   //セッター（ステージクリア）
     public bool StageClearFlag
     {
         set
@@ -260,5 +246,24 @@ public class UIController : MonoBehaviour {
         {
             return DamageImage;
         }
+    }
+
+    //時間を計測する関数
+    private void CountTime()
+    {
+        play_time_seconds += Time.deltaTime;
+        if (play_time_minute > 60)
+        {
+            play_time_minute++;
+            play_time_seconds -= 60;
+        }
+        PlayTimeText.GetComponent<Text>().text = play_time_minute.ToString("00") + ":" + play_time_seconds.ToString("00");
+    }
+
+    //タイムカウンタのUIをリセット
+    private void ResetTime()
+    {
+        play_time_minute = 0;
+        play_time_seconds = 0;
     }
 }

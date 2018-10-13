@@ -134,7 +134,7 @@ e1ea12ca952c81d81a9a21fdf34446ed UnityEngine.HoloLens.dll:UnityEngine.EventSyste
 98d69a140ec0084cde3b6a5e09aea295 UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingCollider
 dfd33ff9ae3ce8d7ca1f22b475ec2387 UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
 96f3ea9f23b6f08e60710ebb4af49174 Unity.TextMeshPro.dll:TMPro.TMP_SpriteAsset
-aac06fde12fbbf2f8c9ca877d6b2c471 Assembly-CSharp.dll:.Controller
+e55ce9e6c5a4d42c51143a31b816c1f6 Assembly-CSharp.dll:.Controller
 a0ef168706150f7106c91e9b321e4346 Assembly-CSharp.dll:DigitalRuby.PyroParticles.FireBaseScript
 00876c3d60ec20c883f21e7ed30e31a4 Assembly-CSharp.dll:.GunAim
 8165f566359b756a76b5f11bc098660e Assembly-CSharp.dll:.CFX_Demo_RandomDir

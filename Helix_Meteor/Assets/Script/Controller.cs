@@ -16,14 +16,16 @@ public class Controller : MonoBehaviour {
     [SerializeField] AudioClip inpact_sound = null;         //被ダメージ時の効果音
     [SerializeField] AudioClip explosion_sound = null;      //死亡時の効果音
     //ステージ
-    [SerializeField] GameObject stage01_ = null;
-    [SerializeField] GameObject stage02_ = null;
+    [SerializeField] GameObject[] stage_;
+    private int default_stage_index = 0;
+    private int now_stage_index;
+    private int last_stage_index;
 
     private Vector3 touch_poz;
     private Vector3 old_player_poz;                 //前フレームでのタッチ位置（スワイプによる上下左右移動処理用）
     private Vector3 new_player_poz;                 //現在フレームでのタッチ位置（スワイプによる上下左右移動処理用）
     private Vector3 move_direction;                 //上下左右移動の移動方向（Player_.Move関数の引数）
-    private float move_speed = 10.0f;               //上下左右移動のスピード調整用の値（Player_.Move関数の引数）
+    private float move_speed = 20.0f;               //上下左右移動のスピード調整用の値（Player_.Move関数の引数）
     //private int default_play_time =1;
     private int play_time;
     //    float lifetime = 0.1f;
@@ -34,6 +36,11 @@ public class Controller : MonoBehaviour {
 
     private void Start()
     {
+        //ステージ生成
+        stage_[default_stage_index].SetActive(true);
+        now_stage_index = default_stage_index;
+        last_stage_index = stage_.Length -1;
+
         audio_source = gameObject.GetComponent<AudioSource>();
         meteor_camera_ = meteor_camera_obj_.GetComponent<MeteorCamera>();
         //コールバックするメソッドを登録
@@ -135,6 +142,14 @@ public class Controller : MonoBehaviour {
     {
         //クリアフラグ設定
         ui_controller_.StageClearFlag = true;
+
+        if (now_stage_index >= last_stage_index)
+        {
+            //全ステージクリアのUI表示処理を実行
+            Debug.Log("全ステージクリア");
+            return;
+        }
+
         ////リトライとネクストのボタンだけ表示させる
         //bool start_button_ = false;
         //bool continue_button_ = false;
@@ -199,18 +214,27 @@ public class Controller : MonoBehaviour {
         //bool retry_button_ = false;
         //bool next_stage_button = false;
         //ui_controller_.MenuUiOn(start_button_, continue_button_, retry_button_, next_stage_button);
-        ui_controller_.StartButtonActive();
 
-        //ステージ２と表示する
+        ui_controller_.StartButtonActive();
+        ui_controller_.MainPanelActive();
 
         //プレイヤー位置を初期化
         GameObject.Destroy(player_clone_);
         //カメラ位置を初期化
         meteor_camera_.PlayerClone = null;
         meteor_camera_.SetDefaultPosition();
+
         //ステージ変更
-        stage01_.SetActive(false);
-        stage02_.SetActive(true);
+        if(now_stage_index < last_stage_index)
+        {
+            //ステージ切り替え処理
+            int old_stage_index = now_stage_index;
+            stage_[old_stage_index].SetActive(false);
+            now_stage_index ++;
+            stage_[now_stage_index].SetActive(true);            
+            //ステージ名を表示
+            ui_controller_.StageNameActive(now_stage_index + 1);
+        }
     }
 
     //ボタン押下時にプレイヤーのクローンを生成
