@@ -7,7 +7,7 @@ public class Player : MonoBehaviour {
 
     //[SerializeField] Controller Controller_ = null;         //エディターからアタッチする
     [SerializeField] GameObject PlayerObj = null;           //エディターからアタッチする(nullチェック用)
-    //[SerializeField] GameObject GameManager_ = null;    //[SerializeField] GameObject GameManager_ = null;
+    //[SerializeField] GameObject GameManager_ = null;     //[SerializeField] GameObject GameManager_ = null;
     public GameObject MainUIPanel_ = null;
     //[SerializeField] GameObject StartButton_ = null;
     public GameObject ContinueButton_ = null;

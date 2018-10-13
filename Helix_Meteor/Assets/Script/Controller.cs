@@ -7,12 +7,12 @@ using UnityEngine.UI;
 
 public class Controller : MonoBehaviour {
 
-    //[SerializeField] Player player_ = null; // エディターからアタッチ
-    [SerializeField] MeteorCamera meteor_camera_ = null; // エディターからアタッチ
+    [SerializeField] Player player_ = null; 
+    [SerializeField] MeteorCamera meteor_camera_ = null;    // エディターからアタッチ
+    [SerializeField] UIController ui_controller_ = null;
     [SerializeField] GameObject player_prefab_ = null;
     [SerializeField] GameObject player_clone_ = null;
     [SerializeField] GameObject meteor_camera_obj_ = null; 
-    [SerializeField] UIController ui_controller_ = null;
     [SerializeField] AudioClip inpact_sound = null;         //被ダメージ時の効果音
     [SerializeField] AudioClip explosion_sound = null;      //死亡時の効果音
     //ステージ
@@ -30,10 +30,12 @@ public class Controller : MonoBehaviour {
 
     private AudioSource audio_source;
     private Vector3 continue_position;              //コンティニュー時の再開地点
+    private Vector3 start_position;
 
     private void Start()
     {
         audio_source = gameObject.GetComponent<AudioSource>();
+        meteor_camera_ = meteor_camera_obj_.GetComponent<MeteorCamera>();
         //コールバックするメソッドを登録
         ui_controller_.OnStartButton += this.OnStartButtonCallBack;
         ui_controller_.OnContinueButton += this.OnContinueButtonCallBack;
@@ -114,6 +116,7 @@ public class Controller : MonoBehaviour {
         Debug.Log("プレイヤー死亡によりコールバック！");
         audio_source.PlayOneShot(explosion_sound);
         continue_position = player_die_position;
+        start_position = new Vector3(0,0,0);
 
         //コンティニューとリトライのボタンだけ表示させる
         //bool start_button_ = false;
@@ -153,27 +156,12 @@ public class Controller : MonoBehaviour {
     //スタートボタンでコールバックされる処理
     public void OnStartButtonCallBack()
     {
-    Debug.Log("スタートボタンでコールバックされた！");
-    //プレイヤーを生成
-    Vector3 start_position = new Vector3(0, 0, 0);
-    GameObject new_player = Instantiate(player_prefab_, start_position, gameObject.transform.rotation) as GameObject;
-    player_clone_ = new_player;
-    player_clone_.SetActive(true);
-
-    //プレイヤー死亡時のコールバック関数を登録
-    player_clone_.GetComponent<Player>().OnPlayerDie += this.OnPlayerDieCallBack;
-    //プレイヤーライフが変更されたときのコールバック関数を登録
-    player_clone_.GetComponent<Player>().OnPlayerLifeChaged += OnplayerLifeChangedCallBack;
-    //プレイヤー被ダメージ時のコールバック関数を登録
-    player_clone_.GetComponent<Player>().OnPlayerDamaged = OnPlayerDamagedCallBack;
-    //ゴール時のコールバック関数を登録
-    player_clone_.GetComponent<Player>().OnGoal = OnGoalCallBack;
-    //ゴール時のコールバック関数を登録
-    player_clone_.GetComponent<Player>().OnGoal = OnGoalCallBack;
-    //無敵モードでの衝突時のコールバック関数を登録
-    player_clone_.GetComponent<Player>().OnInvincible = OnInvincibleCallBack;    
-    //カメラを設定
-    meteor_camera_obj_.GetComponent<MeteorCamera>().PlayerClone = new_player;
+        Debug.Log("スタートボタンでコールバックされた！");
+        //プレイヤーを生成
+        ClonePlayer(start_position);
+        player_clone_.SetActive(true);
+        //カメラを設定
+        meteor_camera_.PlayerClone = player_clone_;
     }
 
     //コンティニューボタンでコールバックされる処理
@@ -181,23 +169,12 @@ public class Controller : MonoBehaviour {
     {
         Debug.Log("コンティニューボタンでコールバックされた！");
         //プレイヤーを生成
-        GameObject new_player = Instantiate(player_prefab_, continue_position, gameObject.transform.rotation) as GameObject;
-        player_clone_ = new_player;
-        //プレイヤー死亡時のコールバック関数を登録
-        player_clone_.GetComponent<Player>().OnPlayerDie += this.OnPlayerDieCallBack;
-        //プレイヤーライフが変更された時のコールバック関数を登録
-        player_clone_.GetComponent<Player>().OnPlayerLifeChaged += OnplayerLifeChangedCallBack;
-        //プレイヤー被ダメージ時のコールバック関数を登録
-        player_clone_.GetComponent<Player>().OnPlayerDamaged = OnPlayerDamagedCallBack;
-        //ゴール時のコールバック関数を登録
-        player_clone_.GetComponent<Player>().OnGoal = OnGoalCallBack;
-        //無敵モードでの衝突時のコールバック関数を登録
-        player_clone_.GetComponent<Player>().OnInvincible = OnInvincibleCallBack;
+        ClonePlayer(continue_position);
         //ノーダメージ期間の実装
-        player_clone_.GetComponent<Player>().NoDamageModeOn();
+        player_.NoDamageModeOn();       
         player_clone_.SetActive(true);
         //カメラを設定
-        meteor_camera_obj_.GetComponent<MeteorCamera>().PlayerClone = new_player;
+        meteor_camera_.PlayerClone = player_clone_;
     }
 
     //リトライボタンでコールバックされる処理
@@ -205,22 +182,10 @@ public class Controller : MonoBehaviour {
     {
         Debug.Log("リトライボタンでコールバックされた！");
         //プレイヤーを生成
-        Vector3 retry_position = new Vector3(0, 0, 0);
-        GameObject new_player = Instantiate(player_prefab_, retry_position, gameObject.transform.rotation) as GameObject;
-        player_clone_ = new_player;
-        new_player.SetActive(true);
-        //プレイヤー死亡時のコールバック関数を登録
-        player_clone_.GetComponent<Player>().OnPlayerDie += this.OnPlayerDieCallBack;
-        //プレイヤーライフが変更された時のコールバック関数を登録
-        player_clone_.GetComponent<Player>().OnPlayerLifeChaged += OnplayerLifeChangedCallBack;
-        //プレイヤー被ダメージ時のコールバック関数を登録
-        player_clone_.GetComponent<Player>().OnPlayerDamaged = OnPlayerDamagedCallBack;
-        //ゴール時のコールバック関数を登録
-        player_clone_.GetComponent<Player>().OnGoal = OnGoalCallBack;
-        //無敵モードでの衝突時のコールバック関数を登録
-        player_clone_.GetComponent<Player>().OnInvincible = OnInvincibleCallBack;
+        ClonePlayer(start_position);
+        player_clone_.SetActive(true);
         //カメラを設定
-        meteor_camera_obj_.GetComponent<MeteorCamera>().PlayerClone = new_player;
+        meteor_camera_.PlayerClone = player_clone_;
     }
 
     //ネクストステージボタンでコールバックされる処理
@@ -229,21 +194,42 @@ public class Controller : MonoBehaviour {
         Debug.Log("ネクストボタンでコールバックされた！");
 
         //スタートボタンだけ表示させる
-        bool start_button_ = true;
-        bool continue_button_ = false;
-        bool retry_button_ = false;
-        bool next_stage_button = false;
-        ui_controller_.MenuUiOn(start_button_, continue_button_, retry_button_, next_stage_button);
+        //bool start_button_ = true;
+        //bool continue_button_ = false;
+        //bool retry_button_ = false;
+        //bool next_stage_button = false;
+        //ui_controller_.MenuUiOn(start_button_, continue_button_, retry_button_, next_stage_button);
+        ui_controller_.StartButtonActive();
+
         //ステージ２と表示する
 
         //プレイヤー位置を初期化
         GameObject.Destroy(player_clone_);
         //カメラ位置を初期化
         meteor_camera_.PlayerClone = null;
-        meteor_camera_obj_.GetComponent<MeteorCamera>().SetDefaultPosition();
+        meteor_camera_.SetDefaultPosition();
         //ステージ変更
         stage01_.SetActive(false);
         stage02_.SetActive(true);
+    }
+
+    //ボタン押下時にプレイヤーのクローンを生成
+    private void ClonePlayer(Vector3 clone_position_)
+    {
+        GameObject new_player = Instantiate(player_prefab_, clone_position_, gameObject.transform.rotation) as GameObject;
+        player_clone_ = new_player;
+        player_ = player_clone_.GetComponent<Player>();
+
+        //プレイヤー死亡時のコールバック関数を登録
+        player_.OnPlayerDie += this.OnPlayerDieCallBack;
+        //プレイヤーライフが変更されたときのコールバック関数を登録
+        player_.OnPlayerLifeChaged += OnplayerLifeChangedCallBack;
+        //プレイヤー被ダメージ時のコールバック関数を登録
+        player_.OnPlayerDamaged = OnPlayerDamagedCallBack;
+        //ゴール時のコールバック関数を登録
+        player_.OnGoal = OnGoalCallBack;
+        //無敵モードでの衝突時のコールバック関数を登録
+        player_.OnInvincible = OnInvincibleCallBack;
     }
 
     private void CountTime()
