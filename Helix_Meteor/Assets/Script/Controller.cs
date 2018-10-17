@@ -140,15 +140,19 @@ public class Controller : MonoBehaviour {
     //ゴール時にコールバックされる処理
     private void OnGoalCallBack()
     {
+        if (now_stage_index < last_stage_index)
+        {
+            //ステージクリア
+            Debug.Log("ステージクリア（全クリではない）");
+            ui_controller_.SetClearMessageNormal();
+        }else if (now_stage_index >= last_stage_index)
+        {
+            //全ステージクリア
+            Debug.Log("全ステージクリア");
+            ui_controller_.SetClearMessageAll();
+        }
         //クリアフラグ設定
         ui_controller_.StageClearFlag = true;
-
-        if (now_stage_index >= last_stage_index)
-        {
-            //全ステージクリアのUI表示処理を実行
-            Debug.Log("全ステージクリア");
-            return;
-        }
 
         ////リトライとネクストのボタンだけ表示させる
         //bool start_button_ = false;

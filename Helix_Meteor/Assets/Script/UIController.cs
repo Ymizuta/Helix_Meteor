@@ -16,8 +16,9 @@ public class UIController : MonoBehaviour {
     [SerializeField] GameObject LifeText = null;
     [SerializeField] GameObject PlayTimeText = null;
     [SerializeField] GameObject ui_message= null;
-    private string clear_message = "STAGE CLEAR";
-    private string all_clear_message = "ALL STAGE CLEAR";
+    private string clear_message;
+    private string normal_clear_message = "STAGE CLEAR";
+    private string all_clear_message = "CONGRATULATION!";
     [SerializeField] GameObject stage_name = null;
     [SerializeField] GameObject invincible_point_gauge;
     //操作UI（スタート、リトライ等のボタン）
@@ -88,6 +89,18 @@ public class UIController : MonoBehaviour {
     public void TimeCountFlagOff()
     {
         time_count_flag = false;
+    }
+
+    //クリアメッセージの設定(ノーマル)
+    public void SetClearMessageNormal()
+    {
+        clear_message = normal_clear_message;
+    }
+
+    //クリアメッセージの設定(全クリ)
+    public void SetClearMessageAll()
+    {
+        clear_message = all_clear_message;
     }
 
     //スタートボタン押下時の処理
