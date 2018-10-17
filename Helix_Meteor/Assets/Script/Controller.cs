@@ -40,7 +40,9 @@ public class Controller : MonoBehaviour {
     private float play_time_seconds;
 
     //スコア管理関連
-
+    private string high_score_text;
+    private float best_time;                        //ベストタイム
+    private string high_score_key = "HIGH SCORE";   //ハイスコアの保存先キー
 
     private void Start()
     {
@@ -48,9 +50,15 @@ public class Controller : MonoBehaviour {
         stage_[default_stage_index].SetActive(true);
         now_stage_index = default_stage_index;
         last_stage_index = stage_.Length -1;
+        //各種初期設定
+
+        PlayerPrefs.DeleteAll();
+        best_time = PlayerPrefs.GetFloat(high_score_key,999);
+        high_score_text = "BEST TIME:" + best_time.ToString();
 
         audio_source = gameObject.GetComponent<AudioSource>();
         meteor_camera_ = meteor_camera_obj_.GetComponent<MeteorCamera>();
+        
         //コールバックするメソッドを登録
         ui_controller_.OnStartButton += this.OnStartButtonCallBack;
         ui_controller_.OnContinueButton += this.OnContinueButtonCallBack;
@@ -168,6 +176,23 @@ public class Controller : MonoBehaviour {
         ui_controller_.ClearFlagOn();
         //タイマーストップフラグ
         TimeCountFlagOff();
+
+        //ベストタイムなら更新
+        float best_time_minute = Mathf.Clamp((best_time /60) - (best_time%60),0,60);
+        float best_time_seconds = Mathf.Clamp(best_time - best_time_minute*60,0,60);
+
+        if ((play_time_minute < best_time_minute) || ((play_time_minute == best_time_minute) && (play_time_seconds < best_time_seconds)))
+        {
+            Debug.Log("ベストタイム更新!!"+ play_time_minute.ToString("00") +":"+play_time_seconds.ToString("00"));
+            best_time = play_time_minute * 60 + play_time_seconds;
+            PlayerPrefs.SetFloat(high_score_key, best_time);
+        }
+        else if((play_time_minute > best_time_minute) || ((play_time_minute == best_time_minute) && (play_time_seconds >= best_time_seconds)))
+        {
+            float best_time_minute_ = Mathf.Clamp((best_time / 60) - (best_time % 60), 0, 60);
+            float best_time_seconds_ = Mathf.Clamp(best_time - best_time_minute * 60, 0, 60);
+            Debug.Log("更新ならず！ベストタイムは" + best_time_minute_.ToString("00") + ":" + best_time_seconds_.ToString("00"));
+        }
 
         ////リトライとネクストのボタンだけ表示させる
         //bool start_button_ = false;
