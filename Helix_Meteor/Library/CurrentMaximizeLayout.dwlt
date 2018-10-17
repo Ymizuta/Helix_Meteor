@@ -22,10 +22,10 @@ MonoBehaviour:
     y: 30
     width: 1520
     height: 715
-  m_MinSize: {x: 817, y: 271}
-  m_MaxSize: {x: 22012, y: 10021}
+  m_MinSize: {x: 809, y: 250}
+  m_MaxSize: {x: 22004, y: 10000}
   vertical: 0
-  controlID: 116
+  controlID: 1476
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -128,7 +128,7 @@ MonoBehaviour:
   m_MinSize: {x: 102, y: 242}
   m_MaxSize: {x: 4002, y: 8042}
   vertical: 1
-  controlID: 117
+  controlID: 1382
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -147,8 +147,8 @@ MonoBehaviour:
     y: 0
     width: 664
     height: 384
-  m_MinSize: {x: 102, y: 121}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 2}
   m_Panes:
   - {fileID: 2}
@@ -328,8 +328,8 @@ MonoBehaviour:
     y: 0
     width: 204
     height: 715
-  m_MinSize: {x: 204, y: 221}
-  m_MaxSize: {x: 4004, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 10}
   m_Panes:
   - {fileID: 10}
@@ -362,9 +362,9 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 48340000
+    m_SelectedIDs: 442c0000
     m_LastClickedID: 0
-    m_ExpandedIDs: e6fbffff0000000018420000
+    m_ExpandedIDs: e6fbffff000000001a420000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -406,8 +406,8 @@ MonoBehaviour:
     y: 0
     width: 375
     height: 715
-  m_MinSize: {x: 234, y: 271}
-  m_MaxSize: {x: 10004, y: 10021}
+  m_MinSize: {x: 230, y: 250}
+  m_MaxSize: {x: 10000, y: 10000}
   m_ActualView: {fileID: 12}
   m_Panes:
   - {fileID: 12}
@@ -451,20 +451,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/inported_assets/JMO Assets
+    - Assets/prefab
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/inported_assets/JMO Assets
+  - Assets/prefab
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\workspace\Helix_Meteor
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 79}
-    m_SelectedIDs: 10320000
-    m_LastClickedID: 12816
-    m_ExpandedIDs: 00000000382a0000f62a00009e2b0000b22b00004a2e00006c2f00008a3000008c300000d8310000ea310000fc31000010320000b432000000330000fc33000048340000f8480000fa480000fc480000fe4800000049000000ca9a3b
+    scrollPos: {x: 0, y: 331}
+    m_SelectedIDs: 682c0000
+    m_LastClickedID: 11368
+    m_ExpandedIDs: 000000003a2a0000f82a0000a02b0000b42b00004c2e00006e2f00008c3000008e300000da310000ec310000fe3100001232000086320000b632000002330000fe3300004a340000fa480000fc480000fe480000004900000249000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -492,7 +492,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000382a0000f62a00009e2b0000b22b00004a2e00006c2f00008a3000008c300000d8310000ea310000fc31000010320000b432000000330000fc33000048340000f8480000fa480000fc480000fe48000000490000
+    m_ExpandedIDs: 000000003a2a0000f82a0000a02b0000b42b00004c2e00006e2f00008c3000008e300000da310000ec310000fe31000012320000b632000002330000fe3300004a340000fa480000fc480000fe480000004900000249000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -517,24 +517,24 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 48340000
-    m_LastClickedInstanceID: 13384
+    m_SelectedInstanceIDs: 442c0000
+    m_LastClickedInstanceID: 11332
     m_HadKeyboardFocusLastEvent: 1
-    m_ExpandedInstanceIDs: 4288fbff582f0000000000004e340000
+    m_ExpandedInstanceIDs: 4288fbff582f0000000000004e340000442c0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: 
-      m_OriginalName: 
+      m_Name: other
+      m_OriginalName: other
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 0
+      m_UserData: 12140
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 11
+      m_OriginalEventType: 0
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 11}
     m_CreateAssetUtility:
@@ -597,7 +597,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 95}
     m_SelectedIDs: 74300000
     m_LastClickedID: 12404
-    m_ExpandedIDs: 00000000382a0000f62a00009e2b0000b22b00004a2e00006c2f00008a3000008c300000d8310000ea310000fc31000010320000b432000000330000fc33000048340000f8480000fa480000fc480000fe48000000490000
+    m_ExpandedIDs: 000000003a2a0000f82a0000a02b0000b42b00004c2e00006e2f00008c3000008e300000da310000ec310000fe31000012320000b632000002330000fe3300004a340000fa480000fc480000fe480000004900000249000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -625,7 +625,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000382a0000f62a00009e2b0000b22b00004a2e00006c2f00008a3000008c300000d8310000ea310000fc31000010320000b432000000330000fc33000048340000f8480000fa480000fc480000fe48000000490000
+    m_ExpandedIDs: 000000003a2a0000f82a0000a02b0000b42b00004c2e00006e2f00008c3000008e300000da310000ec310000fe31000012320000b632000002330000fe3300004a340000fa480000fc480000fe480000004900000249000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -698,8 +698,8 @@ MonoBehaviour:
     y: 0
     width: 277
     height: 715
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 277, y: 71}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -735,7 +735,7 @@ MonoBehaviour:
   m_LockTracker:
     m_IsLocked: 0
   m_PreviewResizer:
-    m_CachedPref: -100
+    m_CachedPref: 270
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
   m_PreviewWindow: {fileID: 0}
