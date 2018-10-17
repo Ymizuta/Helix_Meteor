@@ -125,6 +125,9 @@ public class Controller : MonoBehaviour {
         continue_position = player_die_position;
         start_position = new Vector3(0,0,0);
 
+        //タイマーストップフラグ
+        ui_controller_.TimeCountFlagOff();
+
         //コンティニューとリトライのボタンだけ表示させる
         //bool start_button_ = false;
         //bool continue_button_ = true;
@@ -152,7 +155,9 @@ public class Controller : MonoBehaviour {
             ui_controller_.SetClearMessageAll();
         }
         //クリアフラグ設定
-        ui_controller_.StageClearFlag = true;
+        ui_controller_.ClearFlagOn();
+        //タイマーストップフラグ
+        ui_controller_.TimeCountFlagOff();
 
         ////リトライとネクストのボタンだけ表示させる
         //bool start_button_ = false;

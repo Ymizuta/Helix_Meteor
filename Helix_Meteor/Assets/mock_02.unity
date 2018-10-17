@@ -47088,6 +47088,16 @@ Prefab:
       propertyPath: invincible_point_gauge
       value: 
       objectReference: {fileID: 914467592}
+    - target: {fileID: 114496465763870270, guid: 49e61dded6334de4b89f62944991285d,
+        type: 2}
+      propertyPath: life_text
+      value: 
+      objectReference: {fileID: 320618597}
+    - target: {fileID: 114496465763870270, guid: 49e61dded6334de4b89f62944991285d,
+        type: 2}
+      propertyPath: play_time_text
+      value: 
+      objectReference: {fileID: 331754521}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49e61dded6334de4b89f62944991285d, type: 2}
   m_IsPrefabAsset: 0
