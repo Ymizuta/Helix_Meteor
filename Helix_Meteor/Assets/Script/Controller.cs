@@ -20,7 +20,7 @@ public class Controller : MonoBehaviour {
     private int default_stage_index = 0;
     private int now_stage_index;
     private int last_stage_index;
-
+    //プレイヤーの移動
     private Vector3 touch_poz;
     private Vector3 old_player_poz;                 //前フレームでのタッチ位置（スワイプによる上下左右移動処理用）
     private Vector3 new_player_poz;                 //現在フレームでのタッチ位置（スワイプによる上下左右移動処理用）
@@ -32,7 +32,15 @@ public class Controller : MonoBehaviour {
 
     private AudioSource audio_source;
     private Vector3 continue_position;              //コンティニュー時の再開地点
-    private Vector3 start_position;
+    private Vector3 start_position;                 //スタート・リトライ時の開始地点
+
+    //タイマー関連
+    private bool time_count_flag = false;
+    private float play_time_minute;
+    private float play_time_seconds;
+
+    //スコア管理関連
+
 
     private void Start()
     {
@@ -92,8 +100,11 @@ public class Controller : MonoBehaviour {
             //処理なし
         }
 
-        //プレイタイムを累積
-        CountTime();
+        //タイムを計測しタイマーUIに反映
+        if (time_count_flag)
+        {
+            CountTime();
+        }
 
         //画面振動させる処理
         //if (player_.Player_life < 3)
@@ -126,7 +137,7 @@ public class Controller : MonoBehaviour {
         start_position = new Vector3(0,0,0);
 
         //タイマーストップフラグ
-        ui_controller_.TimeCountFlagOff();
+        TimeCountFlagOff();
 
         //コンティニューとリトライのボタンだけ表示させる
         //bool start_button_ = false;
@@ -135,10 +146,9 @@ public class Controller : MonoBehaviour {
         //bool next_stage_button = false;
         //ui_controller_.MenuUiOn(start_button_, continue_button_, retry_button_, next_stage_button);
         ui_controller_.MainPanelActive();
-        ui_controller_.continueButtonActive();
+        ui_controller_.ContinueButtonActive();
         ui_controller_.RetryButtonActive();
     }
-
 
     //ゴール時にコールバックされる処理
     private void OnGoalCallBack()
@@ -157,7 +167,7 @@ public class Controller : MonoBehaviour {
         //クリアフラグ設定
         ui_controller_.ClearFlagOn();
         //タイマーストップフラグ
-        ui_controller_.TimeCountFlagOff();
+        TimeCountFlagOff();
 
         ////リトライとネクストのボタンだけ表示させる
         //bool start_button_ = false;
@@ -186,6 +196,8 @@ public class Controller : MonoBehaviour {
         player_clone_.SetActive(true);
         //カメラを設定
         meteor_camera_.PlayerClone = player_clone_;
+        //タイマースタート
+        TimeCountFlagOn();
     }
 
     //コンティニューボタンでコールバックされる処理
@@ -199,6 +211,8 @@ public class Controller : MonoBehaviour {
         player_clone_.SetActive(true);
         //カメラを設定
         meteor_camera_.PlayerClone = player_clone_;
+        //タイマースタート
+        TimeCountFlagOn();
     }
 
     //リトライボタンでコールバックされる処理
@@ -210,6 +224,9 @@ public class Controller : MonoBehaviour {
         player_clone_.SetActive(true);
         //カメラを設定
         meteor_camera_.PlayerClone = player_clone_;
+        //タイマースタート
+        TimeCountFlagOn();
+        ResetTime();
     }
 
     //ネクストステージボタンでコールバックされる処理
@@ -232,9 +249,11 @@ public class Controller : MonoBehaviour {
         //カメラ位置を初期化
         meteor_camera_.PlayerClone = null;
         meteor_camera_.SetDefaultPosition();
+        //タイマーリセット
+        ResetTime();
 
         //ステージ変更
-        if(now_stage_index < last_stage_index)
+        if (now_stage_index < last_stage_index)
         {
             //ステージ切り替え処理
             int old_stage_index = now_stage_index;
@@ -272,19 +291,34 @@ public class Controller : MonoBehaviour {
         player_.OnInvinciblePointChange += OnIPointChangeCallBack;
     }
 
+    //時間を計測する関数
     private void CountTime()
     {
-        float play_time_ = Time.time;
-        play_time = (int)play_time_;
+        play_time_seconds += Time.deltaTime;
+        if (play_time_seconds >= 60)
+        {
+            Debug.Log("繰り上げ！");
+            play_time_minute++;
+            play_time_seconds -= 60;
+        }
+        ui_controller_.CountTimeUi(play_time_minute,play_time_seconds);
+    }
+    //タイムをリセット
+    private void ResetTime()
+    {
+        play_time_minute = 0;
+        play_time_seconds = 0;
+    }
+    //UIのタイムカウントを進める/止めるのフラグ設定
+    public void TimeCountFlagOn()
+    {
+        time_count_flag = true;
+    }
+    public void TimeCountFlagOff()
+    {
+        time_count_flag = false;
     }
 
-    public int Play_time
-    {
-        get
-        {
-            return play_time;
-        }
-    }
     //セッター
     public GameObject PlayerObjProp
     {

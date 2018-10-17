@@ -30,10 +30,6 @@ public class UIController : MonoBehaviour {
     //エフェクト関連
     [SerializeField] GameObject DamageImage = null;
     private Image damage_img;
-    //タイム計測
-    private bool time_count_flag = false;
-    private float play_time_minute;
-    private float play_time_seconds;
     //プレイヤークラスから値を受け取る変数
     private Vector3 dying_position;                         //プレイヤー消滅位置
     private bool stage_clear_flag;                          //ステージクリアのフラグ
@@ -74,22 +70,8 @@ public class UIController : MonoBehaviour {
             ui_message.SetActive(false);
         }
 
-        //タイムを計測しタイマーUIに反映
-        if (time_count_flag)
-        {
-            CountTime();
-        }        
     }
 
-    //UIのタイムカウントを進める/止めるのフラグ設定
-    public void TimeCountFlagOn()
-    {
-        time_count_flag = true;
-    }
-    public void TimeCountFlagOff()
-    {
-        time_count_flag = false;
-    }
 
     //クリアメッセージの設定(ノーマル)
     public void SetClearMessageNormal()
@@ -106,8 +88,6 @@ public class UIController : MonoBehaviour {
     //スタートボタン押下時の処理
     private void PushStartButton()
     {
-        //タイム計測
-        TimeCountFlagOn();
         //UI非表示
         MainPanel_.SetActive(false);
         StartButton_.SetActive(false);
@@ -121,8 +101,6 @@ public class UIController : MonoBehaviour {
     //コンティニューボタン押下時の処理
     private void PushContinueButton()
     {
-        //タイム計測
-        TimeCountFlagOn();
         //UI表示
         MainPanel_.SetActive(false);
         RetryButton_.SetActive(false);
@@ -137,9 +115,6 @@ public class UIController : MonoBehaviour {
     //リトライボタン押下時の処理
     private void PushRetryButton()
     {
-        //タイム計測
-        TimeCountFlagOn();
-        ResetTime();
         //UI表示
         MainPanel_.SetActive(false);
         RetryButton_.SetActive(false);
@@ -157,7 +132,6 @@ public class UIController : MonoBehaviour {
     //ネクストステージボタン押下時の処理
     private void PushNextStageButton()
     {
-        ResetTime();
         //UI表示
         MainPanel_.SetActive(false);
         RetryButton_.SetActive(false);
@@ -192,7 +166,7 @@ public class UIController : MonoBehaviour {
         StartButton_.SetActive(true);
     }
     //コンティニューボタンUIを表示する
-    public void continueButtonActive()
+    public void ContinueButtonActive()
     {
         ContinueButton_.SetActive(true);
     }
@@ -217,6 +191,11 @@ public class UIController : MonoBehaviour {
     public void InvinciblePointUI(float invincible_point_)
     {
         invincible_point_gauge.GetComponent<Slider>().value = invincible_point_;
+    }
+    //タイマーUIに時間を反映
+    public void CountTimeUi(float play_time_minute_,float play_time_seconds_)
+    {
+        play_time_text.GetComponent<Text>().text = play_time_minute_.ToString("00") + ":" + play_time_seconds_.ToString("00");
     }
 
     //ステージ名を表示
@@ -266,23 +245,5 @@ public class UIController : MonoBehaviour {
     public void ClearFlagOff()
     {
         stage_clear_flag = false;
-    }
-    //時間を計測する関数
-    private void CountTime()
-    {
-        play_time_seconds += Time.deltaTime;
-        if (play_time_minute > 60)
-        {
-            play_time_minute++;
-            play_time_seconds -= 60;
-        }
-        play_time_text.GetComponent<Text>().text = play_time_minute.ToString("00") + ":" + play_time_seconds.ToString("00");
-    }
-
-    //タイムカウンタのUIをリセット
-    private void ResetTime()
-    {
-        play_time_minute = 0;
-        play_time_seconds = 0;
     }
 }
