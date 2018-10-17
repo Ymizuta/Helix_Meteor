@@ -63,7 +63,6 @@
   <ItemGroup>
     <Compile Include="Assets\inported_assets\JMO Assets\Cartoon FX Easy Editor\Editor\CFXEasyEditor.cs" />
     <Compile Include="Assets\inported_assets\JMO Assets\WarFX\Editor\CFX_SpawnSystemEditor.cs" />
-    <Compile Include="Assets\inported_assets\PyroParticles\Prefab\Editor\PyroParticlesEditor.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/workspace/Helix_Meteor/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
