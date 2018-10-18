@@ -15,7 +15,9 @@ public class UIController : MonoBehaviour {
     //表示UI（ライフ、タイム等）
     [SerializeField] GameObject life_text = null;
     [SerializeField] GameObject play_time_text = null;
-    [SerializeField] GameObject ui_message= null;
+    [SerializeField] GameObject clear_message_ui= null;
+    [SerializeField] GameObject game_over_message_ui = null;
+    [SerializeField] GameObject best_time_ui = null;
     private string clear_message;
     private string normal_clear_message = "STAGE CLEAR";
     private string all_clear_message = "CONGRATULATION!";
@@ -61,17 +63,16 @@ public class UIController : MonoBehaviour {
         if (stage_clear_flag)
         {
             //「Clear」の文字を表示させ点滅させる           
-            ui_message.GetComponent<Text>().text = clear_message;
-            ui_message.SetActive(true);
-            ui_message.GetComponent<Text>().color = new Color(255f,247f,0f,Mathf.PingPong(Time.time,1));
+            clear_message_ui.GetComponent<Text>().text = clear_message;
+            clear_message_ui.SetActive(true);
+            clear_message_ui.GetComponent<Text>().color = new Color(255f,247f,0f,Mathf.PingPong(Time.time,1));
             return;
         }else if (stage_clear_flag == false)
         {
-            ui_message.SetActive(false);
+            clear_message_ui.SetActive(false);
         }
 
     }
-
 
     //クリアメッセージの設定(ノーマル)
     public void SetClearMessageNormal()
@@ -85,6 +86,12 @@ public class UIController : MonoBehaviour {
         clear_message = all_clear_message;
     }
 
+    //ゲームオーバーメッセージ表示
+    public void GameOverMessageActive()
+    {
+        game_over_message_ui.SetActive(true);
+    }
+
     //スタートボタン押下時の処理
     private void PushStartButton()
     {
@@ -92,6 +99,7 @@ public class UIController : MonoBehaviour {
         MainPanel_.SetActive(false);
         StartButton_.SetActive(false);
         stage_name.SetActive(false);
+        best_time_ui.SetActive(false);
         //コールバック（player生成等の処理を実行）
         if (OnStartButton != null)
         {
@@ -106,6 +114,7 @@ public class UIController : MonoBehaviour {
         RetryButton_.SetActive(false);
         ContinueButton_.SetActive(false);
         stage_name.SetActive(false);
+        game_over_message_ui.SetActive(false);
         //コールバック（player生成等の処理を実行）
         if (OnContinueButton != null)
         {
@@ -121,6 +130,8 @@ public class UIController : MonoBehaviour {
         ContinueButton_.SetActive(false);
         NextStageButton_.SetActive(false);
         stage_name.SetActive(false);
+        game_over_message_ui.SetActive(false);
+        best_time_ui.SetActive(false);
         //ステージクリア→リトライ時に「Clear」の文字を表示させないため
         ClearFlagOff();
         //コールバック（player生成等の処理を実行）
@@ -137,6 +148,7 @@ public class UIController : MonoBehaviour {
         RetryButton_.SetActive(false);
         ContinueButton_.SetActive(false);
         NextStageButton_.SetActive(false);
+        best_time_ui.SetActive(false);
         //ステージクリア→リトライ時に「Clear」の文字を表示させないため
         ClearFlagOff();
         //コールバック
@@ -196,6 +208,28 @@ public class UIController : MonoBehaviour {
     public void CountTimeUi(float play_time_minute_,float play_time_seconds_)
     {
         play_time_text.GetComponent<Text>().text = play_time_minute_.ToString("00") + ":" + play_time_seconds_.ToString("00");
+    }
+
+    //ベストタイム表示(後で処理を統合する)
+    public void BestTimeActive()
+    {
+        best_time_ui.SetActive(true);
+    }
+
+    //ベストタイムを表示(フラグでメッセージが変化)
+    public void BestTimeUi(float best_time_minute_,float best_time_seconds_,bool new_record_flag_)
+    {
+        if (new_record_flag_)
+        {
+            string best_score_message = "NEW RECORD!";
+            best_time_ui.GetComponent<Text>().text = best_score_message + "\n" + best_time_minute_.ToString("00") + ":" + best_time_seconds_.ToString("00");
+            return;
+        }
+        else if(new_record_flag_ == false)
+        {
+            string best_score_message = "BEST TIME";
+            best_time_ui.GetComponent<Text>().text = best_score_message + "\n" + best_time_minute_.ToString("00") + ":" + best_time_seconds_.ToString("00");
+        }
     }
 
     //ステージ名を表示

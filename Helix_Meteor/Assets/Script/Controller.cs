@@ -8,13 +8,13 @@ using UnityEngine.UI;
 public class Controller : MonoBehaviour {
 
     [SerializeField] Player player_ = null; 
-    [SerializeField] MeteorCamera meteor_camera_ = null;    // エディターからアタッチ
+    [SerializeField] MeteorCamera meteor_camera_ = null;     // エディターからアタッチ
     [SerializeField] UIController ui_controller_ = null;
     [SerializeField] GameObject player_prefab_ = null;
     [SerializeField] GameObject player_clone_ = null;
     [SerializeField] GameObject meteor_camera_obj_ = null; 
-    [SerializeField] AudioClip inpact_sound = null;         //被ダメージ時の効果音
-    [SerializeField] AudioClip explosion_sound = null;      //死亡時の効果音
+    [SerializeField] AudioClip inpact_sound = null;          //被ダメージ時の効果音
+    [SerializeField] AudioClip explosion_sound = null;       //死亡時の効果音
     //ステージ
     [SerializeField] GameObject[] stage_;
     private int default_stage_index = 0;
@@ -22,17 +22,17 @@ public class Controller : MonoBehaviour {
     private int last_stage_index;
     //プレイヤーの移動
     private Vector3 touch_poz;
-    private Vector3 old_player_poz;                 //前フレームでのタッチ位置（スワイプによる上下左右移動処理用）
-    private Vector3 new_player_poz;                 //現在フレームでのタッチ位置（スワイプによる上下左右移動処理用）
-    private Vector3 move_direction;                 //上下左右移動の移動方向（Player_.Move関数の引数）
-    private float move_speed = 20.0f;               //上下左右移動のスピード調整用の値（Player_.Move関数の引数）
+    private Vector3 old_player_poz;                         //前フレームでのタッチ位置（スワイプによる上下左右移動処理用）
+    private Vector3 new_player_poz;                         //現在フレームでのタッチ位置（スワイプによる上下左右移動処理用）
+    private Vector3 move_direction;                         //上下左右移動の移動方向（Player_.Move関数の引数）
+    private float move_speed = 20.0f;                       //上下左右移動のスピード調整用の値（Player_.Move関数の引数）
     //private int default_play_time =1;
     private int play_time;
     //    float lifetime = 0.1f;
 
     private AudioSource audio_source;
-    private Vector3 continue_position;              //コンティニュー時の再開地点
-    private Vector3 start_position;                 //スタート・リトライ時の開始地点
+    private Vector3 continue_position;                      //コンティニュー時の再開地点
+    private Vector3 start_position = new Vector3(0,0,0);    //スタート・リトライ時の開始地点
 
     //タイマー関連
     private bool time_count_flag = false;
@@ -41,8 +41,11 @@ public class Controller : MonoBehaviour {
 
     //スコア管理関連
     private string high_score_text;
-    private float best_time;                        //ベストタイム
-    private string high_score_key = "HIGH SCORE";   //ハイスコアの保存先キー
+    private float[] best_time;                                //ベストタイム
+    private float best_time_minute;
+    private float best_time_seconds;
+    private string[] high_score_key;           //ハイスコアの保存先キー
+    private bool new_record_flag;
 
     private void Start()
     {
@@ -50,12 +53,30 @@ public class Controller : MonoBehaviour {
         stage_[default_stage_index].SetActive(true);
         now_stage_index = default_stage_index;
         last_stage_index = stage_.Length -1;
-        //各種初期設定
 
+        //ハイスコアの初期化
         PlayerPrefs.DeleteAll();
-        best_time = PlayerPrefs.GetFloat(high_score_key,999);
-        high_score_text = "BEST TIME:" + best_time.ToString();
+        //ハイスコアの保存キー配列初期化
+        high_score_key = new string[stage_.Length];
+        //ベストタイムの配列初期化
+        best_time = new float[stage_.Length];
+        //ベストタイム取得
+        high_score_key[now_stage_index] = "HighScoreKey" + now_stage_index.ToString();
+        best_time[now_stage_index] = PlayerPrefs.GetFloat(high_score_key[now_stage_index],999);
+        //スタート画面のベストタイムの表示
+        //ベストタイムがない場合は「99：99」と表示される
+        if (best_time[now_stage_index] == 999)
+        {
+            best_time_minute = 99.0f;
+            best_time_seconds = 99.0f;
+            ui_controller_.BestTimeUi(best_time_minute,best_time_seconds,false);
+        }else if (best_time[now_stage_index] != 999) {
+            best_time_minute = Mathf.Clamp((best_time[now_stage_index] / 60) - (best_time[now_stage_index] % 60), 0, 60);
+            best_time_seconds = Mathf.Clamp(best_time[now_stage_index] - best_time_minute * 60, 0, 60);
+            ui_controller_.BestTimeUi(best_time_minute, best_time_seconds,false);
+        }
 
+        //各種初期設定
         audio_source = gameObject.GetComponent<AudioSource>();
         meteor_camera_ = meteor_camera_obj_.GetComponent<MeteorCamera>();
         
@@ -142,7 +163,7 @@ public class Controller : MonoBehaviour {
         Debug.Log("プレイヤー死亡によりコールバック！");
         audio_source.PlayOneShot(explosion_sound);
         continue_position = player_die_position;
-        start_position = new Vector3(0,0,0);
+//        start_position = new Vector3(0,0,0);
 
         //タイマーストップフラグ
         TimeCountFlagOff();
@@ -156,6 +177,7 @@ public class Controller : MonoBehaviour {
         ui_controller_.MainPanelActive();
         ui_controller_.ContinueButtonActive();
         ui_controller_.RetryButtonActive();
+        ui_controller_.GameOverMessageActive();
     }
 
     //ゴール時にコールバックされる処理
@@ -177,21 +199,25 @@ public class Controller : MonoBehaviour {
         //タイマーストップフラグ
         TimeCountFlagOff();
 
-        //ベストタイムなら更新
-        float best_time_minute = Mathf.Clamp((best_time /60) - (best_time%60),0,60);
-        float best_time_seconds = Mathf.Clamp(best_time - best_time_minute*60,0,60);
+        //ベストタイムを分と秒に変換
+        best_time_minute = Mathf.Clamp((best_time[now_stage_index] /60) - (best_time[now_stage_index]%60),0,60);
+        best_time_seconds = Mathf.Clamp(best_time[now_stage_index] - best_time_minute*60,0,60);
 
+        //ベストタイム更新した際の処理
         if ((play_time_minute < best_time_minute) || ((play_time_minute == best_time_minute) && (play_time_seconds < best_time_seconds)))
         {
             Debug.Log("ベストタイム更新!!"+ play_time_minute.ToString("00") +":"+play_time_seconds.ToString("00"));
-            best_time = play_time_minute * 60 + play_time_seconds;
-            PlayerPrefs.SetFloat(high_score_key, best_time);
+            //ベストタイムを保存
+            best_time[now_stage_index] = play_time_minute * 60 + play_time_seconds;
+            PlayerPrefs.SetFloat(high_score_key[now_stage_index], best_time[now_stage_index]);
+            //ベストタイムを表示
+            ui_controller_.BestTimeUi(play_time_minute, play_time_seconds,true);
         }
+        //ベストタイム更新できなかった際の処理
         else if((play_time_minute > best_time_minute) || ((play_time_minute == best_time_minute) && (play_time_seconds >= best_time_seconds)))
         {
-            float best_time_minute_ = Mathf.Clamp((best_time / 60) - (best_time % 60), 0, 60);
-            float best_time_seconds_ = Mathf.Clamp(best_time - best_time_minute * 60, 0, 60);
-            Debug.Log("更新ならず！ベストタイムは" + best_time_minute_.ToString("00") + ":" + best_time_seconds_.ToString("00"));
+            Debug.Log("更新ならず！ベストタイムは" + best_time_minute.ToString("00") + ":" + best_time_seconds.ToString("00"));
+            ui_controller_.BestTimeUi(best_time_minute, best_time_seconds,false);
         }
 
         ////リトライとネクストのボタンだけ表示させる
@@ -203,6 +229,7 @@ public class Controller : MonoBehaviour {
         ui_controller_.MainPanelActive();
         ui_controller_.RetryButtonActive();
         ui_controller_.NextStageButtonActive();
+        ui_controller_.BestTimeActive();
     }
 
     //プレイヤーライフが変更時コールバックされる処理
@@ -288,6 +315,25 @@ public class Controller : MonoBehaviour {
             //ステージ名を表示
             ui_controller_.StageNameActive(now_stage_index + 1);
         }
+
+        //次のステージのベストタイム取得
+        //次のステージのハイスコアキーを取得
+        high_score_key[now_stage_index] = "HighScoreKey" + now_stage_index.ToString();
+        best_time[now_stage_index] = PlayerPrefs.GetFloat(high_score_key[now_stage_index], 999);
+        //ベストタイムなら更新      
+        if (best_time[now_stage_index] == 999)
+        {
+            best_time_minute = 99.0f;
+            best_time_seconds = 99.0f;
+            ui_controller_.BestTimeUi(best_time_minute, best_time_seconds, false);
+        }
+        else if (best_time[now_stage_index] != 999)
+        {
+            best_time_minute = Mathf.Clamp((best_time[now_stage_index] / 60) - (best_time[now_stage_index] % 60), 0, 60);
+            best_time_seconds = Mathf.Clamp(best_time[now_stage_index] - best_time_minute * 60, 0, 60);
+            ui_controller_.BestTimeUi(best_time_minute, best_time_seconds, false);
+        }
+        ui_controller_.BestTimeActive();
     }
 
     private void OnIPointChangeCallBack(float invincivle_point_)
