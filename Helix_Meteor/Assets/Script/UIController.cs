@@ -26,9 +26,11 @@ public class UIController : MonoBehaviour {
     //操作UI（スタート、リトライ等のボタン）
     [SerializeField] GameObject MainPanel_ = null;
     [SerializeField] GameObject StartButton_ = null;
+    [SerializeField] GameObject start_button_text_ = null;
     [SerializeField] GameObject ContinueButton_ = null;
     [SerializeField] GameObject RetryButton_ = null;
     [SerializeField] GameObject NextStageButton_ = null;
+    private Text start_text_component; 
     //エフェクト関連
     [SerializeField] GameObject DamageImage = null;
     private Image damage_img;
@@ -52,6 +54,8 @@ public class UIController : MonoBehaviour {
         //ダメージエフェクト用のImage設定
         damage_img = DamageImage.GetComponent<Image>();
         damage_img.color = Color.clear;
+        //設定
+        start_text_component = start_button_text_.GetComponent<Text>();
     }
 
     private void Update()
@@ -59,10 +63,13 @@ public class UIController : MonoBehaviour {
         //画面の色をリセット
         DamageEffectReset();
 
+        //スタートボタン点滅
+        start_text_component.color = new Color(255,0,0, Mathf.PingPong(Time.time, 1));
+
         //クリア時の処理
         if (stage_clear_flag)
         {
-            //「Clear」の文字を表示させ点滅させる           
+            //クリアのメッセージ表示を点滅させる           
             clear_message_ui.GetComponent<Text>().text = clear_message;
             clear_message_ui.SetActive(true);
             clear_message_ui.GetComponent<Text>().color = new Color(255f,247f,0f,Mathf.PingPong(Time.time,1));

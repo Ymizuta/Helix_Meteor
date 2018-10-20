@@ -33,8 +33,7 @@ public class Player : MonoBehaviour {
     const float MIN_SPEED = 0.75f;                          //プレイヤーの直進スピード下限
     const float MAX_SPEED = 2.0f;                           //プレイヤーの直進スピード上限
     //無敵モードに関する変数
-    private bool invincible_flag = false;                   //無敵モード/通常モード切り替わる際のフラグ
-    private bool invincible_mode_flag = false;              //無敵モード中のフラグ(無敵モードポイント増加の中断用)
+    private bool invincible_flag = false;                   //無敵モードフラグ
     private float defaul_invincible_point = 0f;             //無敵モードポイントの初期値
     private float invincible_point;                         //無敵モードポイント（累積）
     private float add_invincible_point = 1.0f;              //加算される無敵モードポイント
