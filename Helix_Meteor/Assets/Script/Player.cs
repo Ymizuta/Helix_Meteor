@@ -176,7 +176,6 @@ public class Player : MonoBehaviour {
     //被ダメージ直後のノーダメージタイム移行（即死防止）
     public void NoDamageModeOn()
     {
-        gameObject.GetComponent<SphereCollider>().enabled = false;
         no_damage_flag = true;
         Debug.Log("ノーダメージ中！");
     }
@@ -235,27 +234,32 @@ public class Player : MonoBehaviour {
             }
         }
 
-        //無敵モード時は障害物の影響を受けない
-        if (invincible_flag)
-        {
-            Debug.Log("無敵モード中！");
-
-            //障害物の爆発エフェクト
-            ExplosionEffect(other);
-            //障害物の爆発音
-            if (OnInvincible != null)
-            {
-                OnInvincible();
-            }
-
-            //障害物の消滅
-            GameObject.Destroy(other.gameObject);
-            return;
-        }
-
         //障害物に衝突した時の処理
         if (other.gameObject.tag == "Obstacle")
         {
+            //被ダメージ直後はダメージを受けない処理
+            if (no_damage_flag)
+            {
+                Debug.Log("被弾後のノーダメージタイム");
+                return;
+            }
+            //無敵モード時は障害物の影響を受けない
+            if (invincible_flag)
+            {
+                Debug.Log("無敵モード中！");
+
+                //障害物の爆発エフェクト
+                ExplosionEffect(other);
+                //障害物の爆発音
+                if (OnInvincible != null)
+                {
+                    OnInvincible();
+                }
+                //障害物の消滅
+                GameObject.Destroy(other.gameObject);
+                return;
+            }
+
             Debug.Log("衝突！");
             //減速
             fall_speed = SpeedDown();
@@ -384,7 +388,6 @@ public class Player : MonoBehaviour {
     //被ダメージ直後のノーダメージタイム解除（即死防止）
     private void NoDamageModeOff()
     {
-        gameObject.GetComponent<SphereCollider>().enabled = true;
         no_damage_time = default_no_damage_time;
         no_damage_flag = false;
         Debug.Log("ノーダメージ解除！");
