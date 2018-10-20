@@ -522,15 +522,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerObj: {fileID: 1093758578934596}
-  MainUIPanel_: {fileID: 1251866462541504, guid: a238576e47f50d14ea5b9984a7415147,
-    type: 2}
-  ContinueButton_: {fileID: 1773233131622924, guid: a238576e47f50d14ea5b9984a7415147,
-    type: 2}
-  RetryButton_: {fileID: 1508456697210292, guid: a238576e47f50d14ea5b9984a7415147,
-    type: 2}
   GameManager_: {fileID: 1972286773717126, guid: 49e61dded6334de4b89f62944991285d,
     type: 2}
-  Controller_: {fileID: 0}
   player_poz: {x: 0, y: 0, z: 0}
   pt_red_fire: {fileID: 198460402025551340}
   jet_effect: {fileID: 1511042332056392}

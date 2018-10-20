@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 
 public class Controller : MonoBehaviour {
-
+    //エディターからアタッチするメンバ変数
     [SerializeField] Player player_ = null; 
-    [SerializeField] MeteorCamera meteor_camera_ = null;     // エディターからアタッチ
+    [SerializeField] MeteorCamera meteor_camera_ = null;     
     [SerializeField] UIController ui_controller_ = null;
     [SerializeField] GameObject player_prefab_ = null;
     [SerializeField] GameObject player_clone_ = null;
@@ -21,8 +21,10 @@ public class Controller : MonoBehaviour {
     private int now_stage_index;
     private int last_stage_index;
     private GameObject new_stage;
-    private Vector3 new_stage_position = new Vector3(0,0,0);
-    private Quaternion new_stage_rotation = new Quaternion(0,0,0,0);
+    private Vector3 new_stage_position 
+        = new Vector3(0,0,0);
+    private Quaternion new_stage_rotation 
+        = new Quaternion(0,0,0,0);
     //プレイヤーの移動
     private Vector3 touch_poz;
     private Vector3 old_player_poz;                         //前フレームでのタッチ位置（スワイプによる上下左右移動処理用）
@@ -30,25 +32,22 @@ public class Controller : MonoBehaviour {
     private Vector3 move_direction;                         //上下左右移動の移動方向（Player_.Move関数の引数）
     private float move_speed = 20.0f;                       //上下左右移動のスピード調整用の値（Player_.Move関数の引数）
     //private int default_play_time =1;
-    private int play_time;
+    private int play_time;                                  //タイムカウンタ、ハイスコア用のプレイタイム
     //    float lifetime = 0.1f;
-
-    private AudioSource audio_source;
+    private AudioSource audio_source;                       
     private Vector3 continue_position;                      //コンティニュー時の再開地点
     private Vector3 start_position = new Vector3(0,0,0);    //スタート・リトライ時の開始地点
-
     //タイマー関連
-    private bool time_count_flag = false;
-    private float play_time_minute;
-    private float play_time_seconds;
-
+    private bool time_count_flag = false;                   //カウント開始・停止用のフラグ
+    private float play_time_minute;                         //タイム（分）
+    private float play_time_seconds;                        //タイム（秒）
     //スコア管理関連
-    private string high_score_text;
-    private float[] best_time;                                //ベストタイム
-    private float best_time_minute;
-    private float best_time_seconds;
-    private string[] high_score_key;           //ハイスコアの保存先キー
-    private bool new_record_flag;
+    private string high_score_text;                         //
+    private float[] best_time;                              //ベストタイム
+    private float best_time_minute;                         //
+    private float best_time_seconds;                        //
+    private string[] high_score_key;                        //ハイスコアの保存先キー
+    private bool new_record_flag;                           //
 
     private void Start()
     {
@@ -167,7 +166,15 @@ public class Controller : MonoBehaviour {
         Debug.Log("プレイヤー死亡によりコールバック！");
         audio_source.PlayOneShot(explosion_sound);
         continue_position = player_die_position;
-//        start_position = new Vector3(0,0,0);
+
+        //コールバック関数を解除
+        player_.OnPlayerDie -= OnPlayerDieCallBack;
+        player_.OnPlayerLifeChaged -= OnplayerLifeChangedCallBack;
+        player_.OnPlayerDamaged -= OnPlayerDamagedCallBack;
+        player_.OnGoal -= OnGoalCallBack;
+        player_.OnInvincible -= OnInvincibleCallBack;
+        player_.OnInvinciblePointChange -= OnIPointChangeCallBack;
+        player_clone_ = null;
 
         //タイマーストップフラグ
         TimeCountFlagOff();
@@ -326,7 +333,6 @@ public class Controller : MonoBehaviour {
             ui_controller_.StageNameActive(now_stage_index + 1);
         }
 
-
         //次のステージのベストタイム取得
         //次のステージのハイスコアキーを取得
         high_score_key[now_stage_index] = "HighScoreKey" + now_stage_index.ToString();
@@ -360,15 +366,15 @@ public class Controller : MonoBehaviour {
         player_ = player_clone_.GetComponent<Player>();
 
         //プレイヤー死亡時のコールバック関数を登録
-        player_.OnPlayerDie += this.OnPlayerDieCallBack;
+        player_.OnPlayerDie += OnPlayerDieCallBack;
         //プレイヤーライフが変更されたときのコールバック関数を登録
         player_.OnPlayerLifeChaged += OnplayerLifeChangedCallBack;
         //プレイヤー被ダメージ時のコールバック関数を登録
-        player_.OnPlayerDamaged = OnPlayerDamagedCallBack;
+        player_.OnPlayerDamaged += OnPlayerDamagedCallBack;
         //ゴール時のコールバック関数を登録
-        player_.OnGoal = OnGoalCallBack;
+        player_.OnGoal += OnGoalCallBack;
         //無敵モードでの衝突時のコールバック関数を登録
-        player_.OnInvincible = OnInvincibleCallBack;
+        player_.OnInvincible += OnInvincibleCallBack;
         //無敵モードポイント変化時のコールバック関数を登録
         player_.OnInvinciblePointChange += OnIPointChangeCallBack;
     }

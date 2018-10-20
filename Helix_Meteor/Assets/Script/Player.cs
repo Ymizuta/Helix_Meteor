@@ -5,17 +5,10 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 
-    //[SerializeField] Controller Controller_ = null;         //エディターからアタッチする
+    //[SerializeField] Controller Controller_ = null;       //エディターからアタッチする
     [SerializeField] GameObject PlayerObj = null;           //エディターからアタッチする(nullチェック用)
-    //[SerializeField] GameObject GameManager_ = null;     //[SerializeField] GameObject GameManager_ = null;
-    public GameObject MainUIPanel_ = null;
-    //[SerializeField] GameObject StartButton_ = null;
-    public GameObject ContinueButton_ = null;
-    public GameObject RetryButton_ = null;
-    //暫定変数
+    //[SerializeField] GameObject GameManager_ = null;      //[SerializeField] GameObject GameManager_ = null;
     public GameObject GameManager_;
-    public GameObject Controller_;
-
     //プレイヤーの位置に関する変数
     public Vector3 player_poz;                              //プレイヤーの位置
     const float MIN_X_POSITION = -3;
@@ -47,17 +40,12 @@ public class Player : MonoBehaviour {
     private float no_damage_time;                           //ノーダメージモード中の経過時間（累積）
     private float add_no_damage_time = 1.0f;                //加算されるノーダメージモード中の経過時間
     const float MAX_NO_DAMAGE_TIME = 1.0f;                  //ノーダメージモード時間の上限
-
     //演出
     [SerializeField] ParticleSystem pt_red_fire = null;     //プレイヤーのエフェクト（通常時・赤い炎）
     //public ParticleSystem pt_blue_fire;                   //プレイヤーのエフェクト（無敵モード時・青い炎）
     [SerializeField] GameObject jet_effect = null;          //プレイヤーのエフェクト（無敵モード時・効果線）
     [SerializeField] GameObject inpact_effect = null;       //被ダメージ時の爆発エフェクト
     [SerializeField] GameObject explosion_effect = null;    //死亡時の爆発エフェクト
-
-    ////被ダメージ時の画面エフェクト用フラグ
-    //private bool damaged_flag;
-
     //任意のタイミングで呼び出されるコールバック関数
     public System.Action<Vector3> OnPlayerDie;              //プレイヤー死亡時
     public System.Action<int> OnPlayerLifeChaged;           //プレイヤーのライフ増減時（UIへの反映）
@@ -68,6 +56,9 @@ public class Player : MonoBehaviour {
 
     private void Start()
     {
+        //nullcheck
+        if (PlayerObj == null) { return; }
+
         //GM取得
         GameManager_ = GameObject.Find("GameManager");
         //プレイヤー位置格納
@@ -90,6 +81,9 @@ public class Player : MonoBehaviour {
     // Update is called once per frame  
     void Update()
     {
+        //nullcheck
+        if (PlayerObj == null) { return; }
+
         //プレイヤーが直進
         Fall();
 
@@ -166,11 +160,11 @@ public class Player : MonoBehaviour {
         //nullcheck
         if (PlayerObj == null){return;}
 
-        Vector3 player_poz_ = gameObject.transform.position;
-        player_poz_ += move_direction * move_speed;
-        player_poz_.x = Mathf.Clamp(player_poz_.x,MIN_X_POSITION,MAX_X_POSITION);
-        player_poz_.y = Mathf.Clamp(player_poz_.y, MIN_Y_POSITION, MAX_Y_POSITION);
-        gameObject.transform.position = player_poz_;
+        player_poz = gameObject.transform.position;
+        player_poz += move_direction * move_speed;
+        player_poz.x = Mathf.Clamp(player_poz.x,MIN_X_POSITION,MAX_X_POSITION);
+        player_poz.y = Mathf.Clamp(player_poz.y, MIN_Y_POSITION, MAX_Y_POSITION);
+        gameObject.transform.position = player_poz;
     }
 
     //被ダメージ直後のノーダメージタイム移行（即死防止）
@@ -221,6 +215,9 @@ public class Player : MonoBehaviour {
     //オブジェクトに衝突した際の処理の関数
     private void OnTriggerEnter(Collider other)
     {
+        //nullcheck
+        if (PlayerObj == null) { return; }
+
         //ゴールした際の処理
         if (other.gameObject.tag == "Goal")
         {
@@ -367,12 +364,11 @@ public class Player : MonoBehaviour {
     //プレイヤーDestroy時にメンバ変数にnull格納
     private void OnDestroy()
     {
-        Controller_ = null;
-        PlayerObj = null;
+        return;
     }
 
-    //プレイヤー死亡時の処理
-    private void PlayerDie()
+//プレイヤー死亡時の処理
+private void PlayerDie()
     {
         Debug.Log("死亡！");
         //爆発エフェクト
@@ -380,7 +376,7 @@ public class Player : MonoBehaviour {
         //コールバック
         if (OnPlayerDie != null) {
             OnPlayerDie(transform.position);
-        }        
+        }
         //プレイヤー消滅
         GameObject.Destroy(gameObject);
     }
