@@ -71,7 +71,6 @@ public class UIController : MonoBehaviour {
         {
             clear_message_ui.SetActive(false);
         }
-
     }
 
     //クリアメッセージの設定(ノーマル)

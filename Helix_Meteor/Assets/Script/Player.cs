@@ -26,12 +26,12 @@ public class Player : MonoBehaviour {
     private int default_player_life = 2;                    //プレイヤーのライフ初期値
     private int player_life;                                 //プレイヤーのライフ
     //プレイヤーの速度に関する変数
-    private float default_fall_speed = 0.5f;                //前方に移動する初期速度
+    private float default_fall_speed = 0.75f;                //前方に移動する初期速度
     private float fall_speed;                               //前方に移動する速度
     private float add_speed = 0.1f;                         //時間経過で加算されるプレイヤーの直進速度
     private float reduce_speed = 1.0f;                      //障害物衝突時に減るプレイヤーの直進速度
-    const float MIN_SPEED = 0.5f;                           //プレイヤーの直進スピード下限
-    const float MAX_SPEED = 1.5f;                           //プレイヤーの直進スピード上限
+    const float MIN_SPEED = 0.75f;                           //プレイヤーの直進スピード下限
+    const float MAX_SPEED = 2.0f;                           //プレイヤーの直進スピード上限
     //無敵モードポイントに関する変数
     private bool invincible_flag = false;                   //無敵モードフラグ
     private float defaul_invincible_point = 0f;             //無敵モードポイントの初期値

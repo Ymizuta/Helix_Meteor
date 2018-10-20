@@ -20,6 +20,9 @@ public class Controller : MonoBehaviour {
     private int default_stage_index = 0;
     private int now_stage_index;
     private int last_stage_index;
+    private GameObject new_stage;
+    private Vector3 new_stage_position = new Vector3(0,0,0);
+    private Quaternion new_stage_rotation = new Quaternion(0,0,0,0);
     //プレイヤーの移動
     private Vector3 touch_poz;
     private Vector3 old_player_poz;                         //前フレームでのタッチ位置（スワイプによる上下左右移動処理用）
@@ -50,7 +53,8 @@ public class Controller : MonoBehaviour {
     private void Start()
     {
         //ステージ生成
-        stage_[default_stage_index].SetActive(true);
+        //        stage_[default_stage_index].SetActive(true);
+        new_stage = Instantiate(stage_[default_stage_index],new_stage_position,new_stage_rotation) as GameObject;
         now_stage_index = default_stage_index;
         last_stage_index = stage_.Length -1;
 
@@ -183,22 +187,10 @@ public class Controller : MonoBehaviour {
     //ゴール時にコールバックされる処理
     private void OnGoalCallBack()
     {
-        if (now_stage_index < last_stage_index)
-        {
-            //ステージクリア
-            Debug.Log("ステージクリア（全クリではない）");
-            ui_controller_.SetClearMessageNormal();
-        }else if (now_stage_index >= last_stage_index)
-        {
-            //全ステージクリア
-            Debug.Log("全ステージクリア");
-            ui_controller_.SetClearMessageAll();
-        }
         //クリアフラグ設定
         ui_controller_.ClearFlagOn();
         //タイマーストップフラグ
         TimeCountFlagOff();
-
         //ベストタイムを分と秒に変換
         best_time_minute = Mathf.Clamp((best_time[now_stage_index] /60) - (best_time[now_stage_index]%60),0,60);
         best_time_seconds = Mathf.Clamp(best_time[now_stage_index] - best_time_minute*60,0,60);
@@ -219,17 +211,31 @@ public class Controller : MonoBehaviour {
             Debug.Log("更新ならず！ベストタイムは" + best_time_minute.ToString("00") + ":" + best_time_seconds.ToString("00"));
             ui_controller_.BestTimeUi(best_time_minute, best_time_seconds,false);
         }
-
         ////リトライとネクストのボタンだけ表示させる
         //bool start_button_ = false;
         //bool continue_button_ = false;
         //bool retry_button_ = true;
         //bool next_stage_button = true;
         //ui_controller_.MenuUiOn(start_button_,continue_button_,retry_button_,next_stage_button);
+
         ui_controller_.MainPanelActive();
         ui_controller_.RetryButtonActive();
-        ui_controller_.NextStageButtonActive();
         ui_controller_.BestTimeActive();
+
+        if (now_stage_index < last_stage_index)
+        {
+            //ステージクリアのメッセージ表示
+            Debug.Log("ステージクリア（全クリではない）");
+            ui_controller_.SetClearMessageNormal();
+            //ネクストステージボタンを表示
+            ui_controller_.NextStageButtonActive();
+        }
+        else if (now_stage_index >= last_stage_index)
+        {
+            //全ステージクリアのメッセージ表示
+            Debug.Log("全ステージクリア");
+            ui_controller_.SetClearMessageAll();
+        }
     }
 
     //プレイヤーライフが変更時コールバックされる処理
@@ -271,6 +277,10 @@ public class Controller : MonoBehaviour {
     private void OnRetryButtonCallBack()
     {
         Debug.Log("リトライボタンでコールバックされた！");
+        //ステージを再生成
+        GameObject.Destroy(new_stage);
+        new_stage = null;
+        new_stage = Instantiate(stage_[now_stage_index], new_stage_position, new_stage_rotation) as GameObject;
         //プレイヤーを生成
         ClonePlayer(start_position);
         player_clone_.SetActive(true);
@@ -307,14 +317,15 @@ public class Controller : MonoBehaviour {
         //ステージ変更
         if (now_stage_index < last_stage_index)
         {
-            //ステージ切り替え処理
-            int old_stage_index = now_stage_index;
-            stage_[old_stage_index].SetActive(false);
-            now_stage_index ++;
-            stage_[now_stage_index].SetActive(true);            
+            //次ステージを生成
+            now_stage_index++;
+            GameObject.Destroy(new_stage);
+            new_stage = null;
+            new_stage = Instantiate(stage_[now_stage_index], new_stage_position, new_stage_rotation) as GameObject;
             //ステージ名を表示
             ui_controller_.StageNameActive(now_stage_index + 1);
         }
+
 
         //次のステージのベストタイム取得
         //次のステージのハイスコアキーを取得
