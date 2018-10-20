@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
-
+using System;
 
 public class UIController : MonoBehaviour {
 
@@ -37,12 +37,23 @@ public class UIController : MonoBehaviour {
     //プレイヤークラスから値を受け取る変数
     private Vector3 dying_position;                         //プレイヤー消滅位置
     private bool stage_clear_flag;                          //ステージクリアのフラグ
-
     //コールバック関数
     public System.Action OnStartButton;
     public System.Action OnContinueButton;
     public System.Action OnRetryButton;
     public System.Action OnNextStageButton;
+    //UI表示用のディクショナリ(MenuUiActive用)
+    private Dictionary<ButtonType, GameObject> buttons = new Dictionary<ButtonType, GameObject>();
+    //キー
+    public enum ButtonType
+    {
+        None,
+        Start,
+        Continue,
+        Retry,
+        NextStage,
+        Panel
+    }
 
     private void Start()
     {
@@ -56,16 +67,21 @@ public class UIController : MonoBehaviour {
         damage_img.color = Color.clear;
         //設定
         start_text_component = start_button_text_.GetComponent<Text>();
+        //ディクショナリ登録
+        buttons[ButtonType.None] = null;
+        buttons[ButtonType.Start] = StartButton_;
+        buttons[ButtonType.Continue] = ContinueButton_;
+        buttons[ButtonType.Retry] = RetryButton_;
+        buttons[ButtonType.NextStage] = NextStageButton_;
+        buttons[ButtonType.Panel] = MainPanel_;
     }
 
     private void Update()
     {
         //画面の色をリセット
         DamageEffectReset();
-
         //スタートボタン点滅
         start_text_component.color = new Color(255,0,0, Mathf.PingPong(Time.time, 1));
-
         //クリア時の処理
         if (stage_clear_flag)
         {
@@ -79,7 +95,6 @@ public class UIController : MonoBehaviour {
             clear_message_ui.SetActive(false);
         }
     }
-
     //クリアメッセージの設定(ノーマル)
     public void SetClearMessageNormal()
     {
@@ -163,40 +178,10 @@ public class UIController : MonoBehaviour {
             OnNextStageButton();
         }
     }
-
     //メニューUIを表示する
-    public void MenuUiOn(bool start_button,bool continue_button,bool retry_button,bool next_button)
+    public void MenuUiActive(ButtonType button_type_)
     {
-        MainPanel_.SetActive(true);
-        if (start_button) {StartButton_.SetActive(true);}
-        if (continue_button){ContinueButton_.SetActive(true);}
-        if (retry_button){RetryButton_.SetActive(true);}
-        if (next_button) {NextStageButton_.SetActive(true);}
-    }
-    //パネルUIを表示する
-    public void MainPanelActive()
-    {
-        MainPanel_.SetActive(true);
-    }
-    //スタートボタンUIを表示する
-    public void StartButtonActive()
-    {
-        StartButton_.SetActive(true);
-    }
-    //コンティニューボタンUIを表示する
-    public void ContinueButtonActive()
-    {
-        ContinueButton_.SetActive(true);
-    }
-    //リトライボタンUIを表示する
-    public void RetryButtonActive()
-    {
-        RetryButton_.SetActive(true);
-    }
-    //ネクストステージボタンUIを表示する
-    public void NextStageButtonActive()
-    {
-        NextStageButton_.SetActive(true);
+        buttons[button_type_].SetActive(true);
     }
     
     //プレイヤーライフをUIに反映
@@ -210,6 +195,17 @@ public class UIController : MonoBehaviour {
     {
         invincible_point_gauge.GetComponent<Slider>().value = invincible_point_;
     }
+
+    internal void MenuUiActive(UIController ui_controller_)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal void MenuUiActive(Action start)
+    {
+        throw new NotImplementedException();
+    }
+
     //タイマーUIに時間を反映
     public void CountTimeUi(float play_time_minute_,float play_time_seconds_)
     {

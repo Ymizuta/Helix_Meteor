@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 
 
@@ -52,7 +53,6 @@ public class Controller : MonoBehaviour {
     private void Start()
     {
         //ステージ生成
-        //        stage_[default_stage_index].SetActive(true);
         new_stage = Instantiate(stage_[default_stage_index],new_stage_position,new_stage_rotation) as GameObject;
         now_stage_index = default_stage_index;
         last_stage_index = stage_.Length -1;
@@ -180,14 +180,9 @@ public class Controller : MonoBehaviour {
         TimeCountFlagOff();
 
         //コンティニューとリトライのボタンだけ表示させる
-        //bool start_button_ = false;
-        //bool continue_button_ = true;
-        //bool retry_button_ = true;
-        //bool next_stage_button = false;
-        //ui_controller_.MenuUiOn(start_button_, continue_button_, retry_button_, next_stage_button);
-        ui_controller_.MainPanelActive();
-        ui_controller_.ContinueButtonActive();
-        ui_controller_.RetryButtonActive();
+        ui_controller_.MenuUiActive(UIController.ButtonType.Panel);
+        ui_controller_.MenuUiActive(UIController.ButtonType.Continue);
+        ui_controller_.MenuUiActive(UIController.ButtonType.Retry);
         ui_controller_.GameOverMessageActive();
     }
 
@@ -218,15 +213,8 @@ public class Controller : MonoBehaviour {
             Debug.Log("更新ならず！ベストタイムは" + best_time_minute.ToString("00") + ":" + best_time_seconds.ToString("00"));
             ui_controller_.BestTimeUi(best_time_minute, best_time_seconds,false);
         }
-        ////リトライとネクストのボタンだけ表示させる
-        //bool start_button_ = false;
-        //bool continue_button_ = false;
-        //bool retry_button_ = true;
-        //bool next_stage_button = true;
-        //ui_controller_.MenuUiOn(start_button_,continue_button_,retry_button_,next_stage_button);
-
-        ui_controller_.MainPanelActive();
-        ui_controller_.RetryButtonActive();
+        ui_controller_.MenuUiActive(UIController.ButtonType.Panel);
+        ui_controller_.MenuUiActive(UIController.ButtonType.Retry);
         ui_controller_.BestTimeActive();
 
         if (now_stage_index < last_stage_index)
@@ -235,7 +223,7 @@ public class Controller : MonoBehaviour {
             Debug.Log("ステージクリア（全クリではない）");
             ui_controller_.SetClearMessageNormal();
             //ネクストステージボタンを表示
-            ui_controller_.NextStageButtonActive();
+            ui_controller_.MenuUiActive(UIController.ButtonType.NextStage);
         }
         else if (now_stage_index >= last_stage_index)
         {
@@ -303,15 +291,8 @@ public class Controller : MonoBehaviour {
     {
         Debug.Log("ネクストボタンでコールバックされた！");
 
-        //スタートボタンだけ表示させる
-        //bool start_button_ = true;
-        //bool continue_button_ = false;
-        //bool retry_button_ = false;
-        //bool next_stage_button = false;
-        //ui_controller_.MenuUiOn(start_button_, continue_button_, retry_button_, next_stage_button);
-
-        ui_controller_.StartButtonActive();
-        ui_controller_.MainPanelActive();
+        ui_controller_.MenuUiActive(UIController.ButtonType.Panel);
+        ui_controller_.MenuUiActive(UIController.ButtonType.Start);
 
         //プレイヤー位置を初期化
         GameObject.Destroy(player_clone_);
