@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-C:/Users/suide/Desktop/Helix_Meteor_android.apk
+C:/Users/suide/Desktop/MeteorRunner.apk
 SceneListBegin?
 Assets/mock_02.unity
 SceneListEnd?

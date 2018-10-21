@@ -16,7 +16,7 @@ public class Player : MonoBehaviour {
     const float MIN_Y_POSITION = -3;
     const float MAX_Y_POSITION = 3;
     //プレイヤーのライフに関する変数
-    private int default_player_life = 2;                    //プレイヤーのライフ初期値
+    private int default_player_life = 3;                    //プレイヤーのライフ初期値
     private int player_life;                                //プレイヤーのライフ
     //プレイヤーの速度に関する変数
     private float default_fall_speed = 0.75f;               //前方に移動する初期速度
