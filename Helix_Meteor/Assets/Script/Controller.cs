@@ -58,7 +58,7 @@ public class Controller : MonoBehaviour {
         last_stage_index = stage_.Length -1;
 
         //ハイスコアの初期化
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
         //ハイスコアの保存キー配列初期化
         high_score_key = new string[stage_.Length];
         //ベストタイムの配列初期化
