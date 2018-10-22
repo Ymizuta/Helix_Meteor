@@ -174,6 +174,7 @@ public class Controller : MonoBehaviour {
         player_.OnGoal -= OnGoalCallBack;
         player_.OnInvincible -= OnInvincibleCallBack;
         player_.OnInvinciblePointChange -= OnIPointChangeCallBack;
+        player_ = null;
         player_clone_ = null;
 
         //タイマーストップフラグ
