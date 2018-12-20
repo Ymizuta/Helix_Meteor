@@ -12,7 +12,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: YM
+  companyName: SDN Games
   productName: METEOR RUNNER
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -242,8 +242,8 @@ PlayerSettings:
   AndroidTargetArchitectures: 5
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: 
-  AndroidKeyaliasName: 
+  AndroidKeystoreName: C:/Users/suide/Desktop/Helix_Meteor/mr.keystore
+  AndroidKeyaliasName: ym050212
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
